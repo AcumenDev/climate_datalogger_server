@@ -1,0 +1,24 @@
+
+spring:
+ datasource:
+    driver-class-name: org.postgresql.Driver
+    type: org.postgresql.ds.PGPoolingDataSource
+    url: jdbc:postgresql://localhost:5432/datalogger
+    username: datalogger
+    password: datalogger
+server:
+    port: 8080
+
+logging:
+ file: ./logs/datalogger.log
+ level:
+  org.springframework.web: INFO
+
+---
+
+spring:
+  profiles: prod
+  datasource:
+      url: jdbc:postgresql://localhost:5432/datalogger
+      username:
+      password:

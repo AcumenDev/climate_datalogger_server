@@ -1,0 +1,5 @@
+server/.gradle
+server/.idea
+server/server.iml
+server/logs
+server/out
