@@ -3,7 +3,7 @@ spring:
  datasource:
     driver-class-name: org.postgresql.Driver
     type: org.postgresql.ds.PGPoolingDataSource
-    url: jdbc:postgresql://localhost:5432/datalogger
+    url: jdbc:postgresql://localhost:5433/datalogger
     username: datalogger
     password: datalogger
 server:

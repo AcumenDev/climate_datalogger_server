@@ -1,5 +1,16 @@
 $(function () {
 
+    Handlebars.registerHelper("prettifyDate", function(timestamp) {
+        return new Date(timestamp).toLocaleString("ru-RU")
+    });
+
+
+
+
+    loadSensors();
+
+
+
     google.charts.load('current', {
         packages: ['corechart', 'line']
     });
@@ -47,8 +58,8 @@ $(function () {
                     vAxis: {
                         title: 'Значение'
                     },
-                    width: 1900,
-                    height: 500
+                    width: 1000,
+                    height: 200
                 };
 
                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
@@ -56,5 +67,13 @@ $(function () {
                 chart.draw(data, options);
 
             });
+    }
+
+
+    function loadSensors() {
+        var template = Handlebars.compile($("#sensors-blank").html());
+        $.getJSON("/api/sensors?login=akum", function (value) {
+            $("#sensors").html(template(value));
+        });
     }
 });
