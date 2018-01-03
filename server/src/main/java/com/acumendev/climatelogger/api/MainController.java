@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,15 +22,14 @@ public class MainController {
     private final SensorReadingsRepository sensorReadingsRepository;
 
     @GetMapping(path = "/api/readings")
-    public ReadingsDto readings(
-            @RequestParam("login") String login,
-            @RequestParam("type") Integer type,
-            @RequestParam("from") Long from,
-            @RequestParam("to") Long to) {
-        log.warn("{} {} {} {}", login, from, to, type);
+    public ReadingsDto readings(Principal principal,
+                                @RequestParam("type") Integer type,
+                                @RequestParam("from") Long from,
+                                @RequestParam("to") Long to) {
+        log.warn("{} {} {} {}", principal.getName(), from, to, type);
         ReadingsDto readingsDto = new ReadingsDto();
-        List<SensorReadingsDbo> dbos = sensorReadingsRepository.findByLoginAndTypeAndFromAndTo(login, type, from, to);
-        readingsDto.setLogin(login);
+        List<SensorReadingsDbo> dbos = sensorReadingsRepository.findByLoginAndTypeAndFromAndTo(principal.getName(), type, from, to);
+        readingsDto.setLogin(principal.getName());
         readingsDto.setType(type);
         List<ReadingsDto.Data> data = dbos
                 .stream()
@@ -44,11 +44,11 @@ public class MainController {
 
     @GetMapping(path = "/api/readings/login")
     public ReadingsDto readingsByLogin(
-            @RequestParam("login") String login,
+            Principal principal,
             @RequestParam("type") Integer type) {
         ReadingsDto readingsDto = new ReadingsDto();
-        List<SensorReadingsDbo> dbos = sensorReadingsRepository.findByLoginAndType(login, type);
-        readingsDto.setLogin(login);
+        List<SensorReadingsDbo> dbos = sensorReadingsRepository.findByLoginAndType(principal.getName(), type);
+        readingsDto.setLogin(principal.getName());
         readingsDto.setType(type);
         List<ReadingsDto.Data> data = dbos
                 .stream()

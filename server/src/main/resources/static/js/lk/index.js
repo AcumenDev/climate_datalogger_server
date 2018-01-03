@@ -22,7 +22,7 @@ $(function () {
         $.ajax({
             method: "GET",
             url: "/api/readings/login",
-            data: {login: "akum", type: "1"}
+            data: { type: "1"}
         })
             .done(function (response) {
                 // alert("Data Saved: " + msg);
@@ -72,7 +72,7 @@ $(function () {
 
     function loadSensors() {
         var template = Handlebars.compile($("#sensors-blank").html());
-        $.getJSON("/api/sensors?login=akum", function (value) {
+        $.getJSON("/api/sensors", function (value) {
             $("#sensors").html(template(value));
         });
     }

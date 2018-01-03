@@ -20,6 +20,5 @@ public class InputController {
     public void inputData(@RequestBody InputValueDto body) {
         log.info(JsonUtils.dump(body));
         sensorReadingsService.addReadings(body);
-
     }
 }

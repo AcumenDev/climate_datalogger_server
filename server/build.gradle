@@ -25,6 +25,9 @@ dependencies {
     compile group: 'org.projectlombok', name: 'lombok'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+
     runtime group: 'org.postgresql', name: 'postgresql'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 }

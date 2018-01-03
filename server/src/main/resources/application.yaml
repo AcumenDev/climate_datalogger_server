@@ -12,7 +12,8 @@ server:
 logging:
  file: ./logs/datalogger.log
  level:
-  org.springframework.web: INFO
+  org.springframework.web: DEBUG
+  org.springframework.security: DEBUG
 
 ---
 

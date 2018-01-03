@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +21,8 @@ public class SensorController {
     private final SensorRepository sensorRepository;
 
     @GetMapping(path = "/api/sensors")
-    public List<SensorDto> getSensors(@RequestParam("login") String login) {
-        List<ActiveSensorDbo> sensorDbos = sensorRepository.getAllByLogin(login);
+    public List<SensorDto> getSensors(Principal principal) {
+        List<ActiveSensorDbo> sensorDbos = sensorRepository.getAllByLogin(principal.getName());
         return sensorDbos.stream().map(SensorDtoMapper::map).collect(Collectors.toList());
     }
 }

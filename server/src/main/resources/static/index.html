@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Redis Cluster Monitor</title>
+    <title>DataLogger Monitor</title>
     <meta name="description" content="DataLogger">
-    <meta name="" content="Redis Cluster">
 
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -20,45 +19,15 @@
     <script src="lib/jquery/jquery.min.js"></script>
     <script src="lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="lib/handlebars/handlebars.min.js"></script>
-    <script src="js/index.js"></script>
+
 </head>
 
 <body>
 
-
-<div id="content" class="container">
-    <div id="chart_div">
-    </div>
-
-    <div id="sensors">
-    </div>
-
-</div>
+<a href="/authentication/login.html"> Логин</a>
+<a href="http://localhost:8080/api/sensors">Сенсоры</a>
 
 
-<script id="sensors-blank" type="text/x-handlebars-template">
-    <div class="panel panel-default panel-info">
-        <div class="table-responsive">
-            <table class="table table-hover table-info">
-                <tr>
-                    <th>room</th>
-                    <th>num</th>
-                    <th>type</th>
-                    <th>lastActiveTime</th>
 
-                </tr>
-
-                {{#each this}}
-                <tr class="nodeData">
-                    <td class="room">{{room}}</td>
-                    <td class="num">{{num}}</td>
-                    <td class="type">{{type}}</td>
-                    <td class="lastActiveTime">{{prettifyDate lastActiveTime}}</td>
-                </tr>
-                {{/each}}
-            </table>
-        </div>
-    </div>
-</script>
 </body>
 </html>
