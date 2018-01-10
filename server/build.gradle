@@ -27,6 +27,8 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
+// https://mvnrepository.com/artifact/io.netty/netty-all
+    compile group: 'io.netty', name: 'netty-all'//, version: '4.1.19.Final'
 
     runtime group: 'org.postgresql', name: 'postgresql'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'

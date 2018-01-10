@@ -56,7 +56,7 @@ public class EspClient extends Thread  {
                                 .build())
                         .build();
 
-                restTemplate.postForEntity(url, inputValueDto, String.class);
+               // restTemplate.postForEntity(url, inputValueDto, String.class);
 
 
             } catch (Exception e) {

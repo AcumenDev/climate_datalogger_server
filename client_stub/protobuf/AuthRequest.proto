@@ -1,0 +1,13 @@
+syntax = "proto2";
+package tutorial;
+
+option java_package = "com.acumen.tcp.dto_new";
+//option java_outer_classname = "AddressBookProtos";
+//protoc --java_out=../src/main/java/ AuthRequest.proto
+message AuthRequest {
+ required int32 id = 1;
+ required int32 type = 2;
+ required int32 version = 3;
+ required string apiKey = 4;
+ required int32 room = 5;
+ }
