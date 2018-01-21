@@ -1,6 +1,7 @@
 package com.acumen.tcp;
 
 import com.acumen.tcp.dto.RequestPacketFactory;
+import com.acumen.tcp.dto_new.TempNew;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -8,6 +9,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.logging.LoggingHandler;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -42,9 +46,13 @@ public class Client extends Thread {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast(
-                                    new ResponseDecoder(packetFactory),
-                                    new RequestEncoder(),
-                                    new ClientHandler(connectStore));
+                                    new LoggingHandler(),
+                                    // new ProtobufVarint32FrameDecoder(),
+                                    new ProtobufDecoder(TempNew.BaseMessage.getDefaultInstance()),
+                                    new ClientHandler(connectStore),
+                                    //new ProtobufVarint32LengthFieldPrepender(),
+                                    new ProtobufEncoder()
+                            );
                         }
                     });
 

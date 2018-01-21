@@ -1,7 +1,5 @@
 package com.acumendev.climatelogger.input;
 
-import com.acumendev.climatelogger.input.tcp.dto.AuthRequest;
-import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -12,12 +10,12 @@ import java.util.Map;
 public class Worker extends Thread {
 
 
-    private final Map<String, ChannelHandlerContext> clientHandlers;
+    private final Map<String, AuthHandler> clientHandlers;
 
 
     private boolean state = true;
 
-    public Worker(Map<String, ChannelHandlerContext> clientHandlers) {
+    public Worker(Map<String, AuthHandler> clientHandlers) {
         this.clientHandlers = clientHandlers;
     }
 

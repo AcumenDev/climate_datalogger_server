@@ -1,0 +1,62 @@
+syntax = "proto2";
+//package tutorial;
+
+
+//option java_package = "com.acumendev.climatelogger.input.tcp";
+
+//option java_package = "com.acumen.tcp.dto_new";
+//protoc --java_out=./client_stub/src/main/java/ ./client_stub/protobuf/TemperatureProtocol.proto
+
+//option java_package = "com.acumendev.climatelogger.input.tcp";
+//protoc --java_out=./server/src/main/java/ ./client_stub/protobuf/TemperatureProtocol.proto
+
+
+///Client send
+message AuthRequest {
+    required int32 id = 1 [default = 0];
+    required int32 type = 2;
+    required int32 version = 3;
+    required string apiKey = 4;
+}
+
+message AuthResponse {
+    required int32 id = 1 [default = 1];
+    required int32 state = 2;
+}
+
+message NotifyRequest {
+    required int32 id = 1 [default = 2];
+    optional float current = 2;
+    optional float target = 3;
+    optional float gisteris = 4;
+    optional float tuningSensor = 5;
+    optional uint32 heatingState = 6;
+    optional uint32 coolingState = 7;
+
+}
+
+message NotifyResponse {
+    required int32 id = 1 [default = 3];
+}
+
+message HeartBeatRequest {
+    required int32 id = 1 [default = 4];
+}
+
+message HeartBeatResponse {
+    required int32 id = 1 [default = 5];
+}
+
+///Server send
+
+message ConfigRequest {
+    required int32 id = 1 [default = 6];
+    optional float target = 3;
+    optional float gisteris = 4;
+    optional float tuningSensor = 5;
+
+}
+
+message ConfigResponse {
+    required int32 id = 1 [default = 7];
+}

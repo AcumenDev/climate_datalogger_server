@@ -13,6 +13,7 @@ server:
 logging:
  file: ./logs/datalogger.log
  level:
+  io.netty.handler: TRACE
   org.springframework.web: WARN
   org.springframework.security: WARN
 

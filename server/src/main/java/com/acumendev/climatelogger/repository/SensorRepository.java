@@ -36,7 +36,6 @@ public class SensorRepository {
         return jdbcTemplate.query(selectByLogin,
                 new MapSqlParameterSource("login", login),
                 (rs, rowNum) -> build(rs));
-
     }
 
     private ActiveSensorDbo build(ResultSet rs) throws SQLException {
@@ -47,7 +46,5 @@ public class SensorRepository {
                 .type(rs.getInt("type"))
                 .lastActiveDateTime(rs.getTimestamp("last_active_date_time").getTime())
                 .build();
-
     }
-
 }

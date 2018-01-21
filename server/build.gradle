@@ -29,6 +29,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
 // https://mvnrepository.com/artifact/io.netty/netty-all
     compile group: 'io.netty', name: 'netty-all'//, version: '4.1.19.Final'
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.5.1'
 
     runtime group: 'org.postgresql', name: 'postgresql'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'

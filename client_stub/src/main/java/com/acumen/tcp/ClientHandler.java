@@ -1,11 +1,10 @@
 package com.acumen.tcp;
 
-import com.acumen.tcp.dto.AuthRequest;
-import com.acumen.tcp.dto.ResponsePacket;
+import com.acumen.tcp.dto_new.TempNew;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class ClientHandler extends SimpleChannelInboundHandler<ResponsePacket> {
+public class ClientHandler extends SimpleChannelInboundHandler<TempNew.BaseMessage> {
 
     private final ConnectStore connectStore;
 
@@ -26,12 +25,14 @@ public class ClientHandler extends SimpleChannelInboundHandler<ResponsePacket> {
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         super.channelUnregistered(ctx);
         System.out.println("channelUnregistered ");
+        connectStore.setCtx(null);
     }
 
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ResponsePacket msg) throws Exception {
-        System.out.println("channelRead0  " + msg.getId());
-       // ctx.writeAndFlush(ResponseData.builder().val("1234567890").build());
+    protected void channelRead0(ChannelHandlerContext ctx, TempNew.BaseMessage msg) throws Exception {
+        System.out.println("channelRead0  \n" + msg.toString());
+        // ctx.writeAndFlush(ResponseData.builder().val("1234567890").build());
+        connectStore.queue.add(msg);
     }
 }
