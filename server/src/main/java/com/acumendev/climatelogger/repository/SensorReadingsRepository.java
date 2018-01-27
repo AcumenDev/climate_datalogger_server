@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -63,7 +64,8 @@ public class SensorReadingsRepository {
 
     }
 
-    private SensorReadingsDbo build(ResultSet rs) throws SQLException {
+    private  SensorReadingsDbo build(@NonNull ResultSet rs) throws SQLException {
+
         return SensorReadingsDbo.builder()
                 .id(rs.getLong("id"))
                 .login(rs.getString("login"))

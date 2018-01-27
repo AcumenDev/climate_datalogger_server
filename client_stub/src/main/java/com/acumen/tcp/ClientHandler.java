@@ -1,10 +1,10 @@
 package com.acumen.tcp;
 
-import com.acumen.tcp.dto_new.TempNew;
+import com.acumen.tcp.dto_new.TemperatureProtocol;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class ClientHandler extends SimpleChannelInboundHandler<TempNew.BaseMessage> {
+public class ClientHandler extends SimpleChannelInboundHandler<TemperatureProtocol.BaseMessage> {
 
     private final ConnectStore connectStore;
 
@@ -17,7 +17,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<TempNew.BaseMessa
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
         System.out.println("channelRegistered ");
-
         connectStore.setCtx(ctx);
     }
 
@@ -30,7 +29,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<TempNew.BaseMessa
 
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TempNew.BaseMessage msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, TemperatureProtocol.BaseMessage msg) throws Exception {
         System.out.println("channelRead0  \n" + msg.toString());
         // ctx.writeAndFlush(ResponseData.builder().val("1234567890").build());
         connectStore.queue.add(msg);

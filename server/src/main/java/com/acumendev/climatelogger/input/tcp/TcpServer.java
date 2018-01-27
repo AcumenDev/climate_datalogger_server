@@ -1,7 +1,7 @@
 package com.acumendev.climatelogger.input.tcp;
 
 import com.acumendev.climatelogger.input.AuthHandler;
-import com.acumendev.climatelogger.input.SensorChannel;
+import com.acumendev.climatelogger.service.sensor.hadlers.SensorHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -12,20 +12,22 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class TcpServer extends Thread {
 
-    private final Map<String, SensorChannel> clientHandlers;
+    private final Map<String, SensorHandler> sensorHandlers;
     private final AuthHandler authHandler;
 
-    public TcpServer(Map<String, SensorChannel> clientHandlers,
+    public TcpServer(Map<String, SensorHandler> sensorHandlers,
                      AuthHandler authHandler) {
-        this.clientHandlers = clientHandlers;
+        this.sensorHandlers = sensorHandlers;
         this.authHandler = authHandler;
     }
 
@@ -47,8 +49,8 @@ public class TcpServer extends Thread {
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast(
                                     //new LoggingHandler(LogLevel.TRACE),
-                                    new ProtobufDecoder(TempNew.BaseMessage.getDefaultInstance()),
-                                    new TcpHandler(clientHandlers, authHandler),
+                                    new ProtobufDecoder(TemperatureProtocol.BaseMessage.getDefaultInstance()),
+                                    new TcpHandler(sensorHandlers, authHandler),
                                     new ProtobufEncoder()
                             );
                         }
@@ -56,8 +58,8 @@ public class TcpServer extends Thread {
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
             ChannelFuture f = b.bind(9999).sync();
             f.channel().closeFuture().awaitUninterruptibly().sync();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("Ошбка сервера tcp", e);
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();

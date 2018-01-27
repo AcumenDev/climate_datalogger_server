@@ -1,62 +1,70 @@
 syntax = "proto2";
 //package tutorial;
 
-
 //option java_package = "com.acumendev.climatelogger.input.tcp";
 
-//option java_package = "com.acumen.tcp.dto_new";
+option java_package = "com.acumen.tcp.dto_new";
 //protoc --java_out=./client_stub/src/main/java/ ./client_stub/protobuf/TemperatureProtocol.proto
 
 //option java_package = "com.acumendev.climatelogger.input.tcp";
 //protoc --java_out=./server/src/main/java/ ./client_stub/protobuf/TemperatureProtocol.proto
 
 
+message BaseMessage {
+    required PacketType type = 1;
+    optional AuthRequest authRequest = 2;
+    optional AuthResponse authResponse = 3;
+    optional NotifyRequest notifyRequest = 4;
+    optional ConfigSet configSet = 5;
+    optional ConfigChanges configChanges = 6;
+    optional ActualConfig actualConfig = 7;
+}
+
+enum PacketType {
+    authRequest = 1;
+    authResponse = 2;
+    notifyRequest = 3;
+    notifyResponse = 4;
+
+    getActualConfig = 5;
+    actualConfig = 6;
+    setConfig = 7;
+    configChanges = 8;
+}
+
 ///Client send
 message AuthRequest {
-    required int32 id = 1 [default = 0];
-    required int32 type = 2;
-    required int32 version = 3;
-    required string apiKey = 4;
+    required int32 type = 1;
+    required int32 version = 2;
+    required string apiKey = 3;
 }
 
 message AuthResponse {
-    required int32 id = 1 [default = 1];
-    required int32 state = 2;
+    required int32 state = 1;
 }
 
 message NotifyRequest {
-    required int32 id = 1 [default = 2];
-    optional float current = 2;
-    optional float target = 3;
-    optional float gisteris = 4;
-    optional float tuningSensor = 5;
-    optional uint32 heatingState = 6;
-    optional uint32 coolingState = 7;
-
-}
-
-message NotifyResponse {
-    required int32 id = 1 [default = 3];
-}
-
-message HeartBeatRequest {
-    required int32 id = 1 [default = 4];
-}
-
-message HeartBeatResponse {
-    required int32 id = 1 [default = 5];
+    optional float current = 1;
+    optional uint32 heatingState = 5;
+    optional uint32 coolingState = 6;
 }
 
 ///Server send
 
-message ConfigRequest {
-    required int32 id = 1 [default = 6];
-    optional float target = 3;
-    optional float gisteris = 4;
-    optional float tuningSensor = 5;
-
+message ConfigSet {
+    optional float target = 1;
+    optional float gisteris = 2;
+    optional float tuningSensor = 3;
 }
 
-message ConfigResponse {
-    required int32 id = 1 [default = 7];
+message ActualConfig {
+    required float target = 1;
+    required float gisteris = 2;
+    required float tuningSensor = 3;
+}
+
+message ConfigChanges {
+    optional float target = 1;
+    optional float gisteris = 2;
+    optional float tuningSensor = 3;
 }

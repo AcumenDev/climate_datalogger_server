@@ -1,6 +1,6 @@
 package com.acumendev.climatelogger.repository;
 
-import com.acumendev.climatelogger.repository.dbo.ActiveSensorDbo;
+import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,36 +15,47 @@ import java.util.List;
 @AllArgsConstructor
 public class SensorRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final String insertReadings = "INSERT INTO sensor (login, room, num, type,  last_active_date_time) VALUES (:login, :room, :num, :type, :last_active_date_time) ON CONFLICT (login, room, num, type) DO UPDATE SET last_active_date_time = EXCLUDED.last_active_date_time;";
-    private final String selectByLogin = "SELECT * FROM sensor WHERE login = :login;";
+    private final String insertReadings = "UPDATE sensor SET last_active_date_time = :last_active_date_time WHERE id=:id;";
+    private final String selectByLogin = "SELECT * FROM sensor WHERE user_id = :user_id;";
 
-    public void updateActive(List<ActiveSensorDbo> sensors) {
-        MapSqlParameterSource[] mapSqlParameterSource = new MapSqlParameterSource[sensors.size()];
-        for (int i = 0; i < sensors.size(); i++) {
-            ActiveSensorDbo item = sensors.get(i);
+    private final String selectEnabled = "SELECT * FROM sensor WHERE state = TRUE;";
+
+
+    public void updateActive(List<Long> sensorsIds) {
+        Long time = System.currentTimeMillis();
+        MapSqlParameterSource[] mapSqlParameterSource = new MapSqlParameterSource[sensorsIds.size()];
+        for (int i = 0; i < sensorsIds.size(); i++) {
+            Long item = sensorsIds.get(i);
             mapSqlParameterSource[i] = new MapSqlParameterSource()
-                    .addValue("login", item.getLogin())
-                    .addValue("room", item.getRoom())
-                    .addValue("num", item.getNum())
-                    .addValue("type", item.getType())
-                    .addValue("last_active_date_time", new Timestamp(item.getLastActiveDateTime()));
+                    .addValue("id", item)
+                    .addValue("last_active_date_time", new Timestamp(time));
         }
         jdbcTemplate.batchUpdate(insertReadings, mapSqlParameterSource);
     }
 
-    public List<ActiveSensorDbo> getAllByLogin(String login) {
+    public List<SensorDbo> getAllByUserId(long userId) {
         return jdbcTemplate.query(selectByLogin,
-                new MapSqlParameterSource("login", login),
+                new MapSqlParameterSource("user_id", userId),
                 (rs, rowNum) -> build(rs));
     }
 
-    private ActiveSensorDbo build(ResultSet rs) throws SQLException {
-        return ActiveSensorDbo.builder()
-                .login(rs.getString("login"))
-                .room(rs.getInt("room"))
+    private SensorDbo build(ResultSet rs) throws SQLException {
+        return SensorDbo.builder()
+                .id(rs.getLong("id"))
+                .userId(rs.getLong("user_id"))
+                .name(rs.getString("name"))
                 .num(rs.getInt("num"))
                 .type(rs.getInt("type"))
-                .lastActiveDateTime(rs.getTimestamp("last_active_date_time").getTime())
+                .apiKey(rs.getString("api_key"))
+                .description(rs.getString("description"))
+                .lastActiveDateTime(
+                        rs.getTimestamp("last_active_date_time") != null ?
+                                rs.getTimestamp("last_active_date_time").getTime()
+                                : null)
                 .build();
+    }
+
+    public List<SensorDbo> getEnabled() {
+        return jdbcTemplate.query(selectEnabled, (rs, rowNum) -> build(rs));
     }
 }

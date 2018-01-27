@@ -4,7 +4,7 @@ spring:
  datasource:
     driver-class-name: org.postgresql.Driver
     type: org.postgresql.ds.PGPoolingDataSource
-    url: jdbc:postgresql://localhost:5433/datalogger
+    url: jdbc:postgresql://localhost:5432/datalogger
     username: datalogger
     password: datalogger
 server:
@@ -15,7 +15,7 @@ logging:
  level:
   io.netty.handler: TRACE
   org.springframework.web: WARN
-  org.springframework.security: WARN
+  org.springframework.security: TRACE
 
 ---
 

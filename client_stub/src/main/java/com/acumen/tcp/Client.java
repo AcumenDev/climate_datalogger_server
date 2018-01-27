@@ -1,7 +1,6 @@
 package com.acumen.tcp;
 
-import com.acumen.tcp.dto.RequestPacketFactory;
-import com.acumen.tcp.dto_new.TempNew;
+import com.acumen.tcp.dto_new.TemperatureProtocol;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -20,11 +19,9 @@ import javax.annotation.PostConstruct;
 @Service
 public class Client extends Thread {
 
-    private final RequestPacketFactory packetFactory;
     private final ConnectStore connectStore;
 
-    public Client(RequestPacketFactory packetFactory, ConnectStore connectStore) {
-        this.packetFactory = packetFactory;
+    public Client(ConnectStore connectStore) {
         this.connectStore = connectStore;
     }
 
@@ -35,6 +32,7 @@ public class Client extends Thread {
 
     @Override
     public void run() {
+
         EventLoopGroup group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
         try {
@@ -48,7 +46,7 @@ public class Client extends Thread {
                             ch.pipeline().addLast(
                                     new LoggingHandler(),
                                     // new ProtobufVarint32FrameDecoder(),
-                                    new ProtobufDecoder(TempNew.BaseMessage.getDefaultInstance()),
+                                    new ProtobufDecoder(TemperatureProtocol.BaseMessage.getDefaultInstance()),
                                     new ClientHandler(connectStore),
                                     //new ProtobufVarint32LengthFieldPrepender(),
                                     new ProtobufEncoder()

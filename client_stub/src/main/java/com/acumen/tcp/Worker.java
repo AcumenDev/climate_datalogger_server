@@ -1,9 +1,9 @@
 package com.acumen.tcp;
 
-import com.acumen.tcp.dto_new.TempNew;
-import com.acumen.tcp.dto_new.TempNew.AuthRequest;
-import com.acumen.tcp.dto_new.TempNew.BaseMessage;
-import com.acumen.tcp.dto_new.TempNew.PacketType;
+import com.acumen.tcp.dto_new.TemperatureProtocol;
+import com.acumen.tcp.dto_new.TemperatureProtocol.AuthRequest;
+import com.acumen.tcp.dto_new.TemperatureProtocol.BaseMessage;
+import com.acumen.tcp.dto_new.TemperatureProtocol.PacketType;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -53,7 +53,7 @@ public class Worker extends Thread {
                     AuthRequest request = AuthRequest.newBuilder()
                             .setType(1)
                             .setVersion(1)
-                            .setApiKey("12345678901234567890")
+                            .setApiKey("1234567890")
                             .build();
 
                /* connectStore.getCtx().writeAndFlush(AuthRequest.builder()
@@ -78,7 +78,7 @@ public class Worker extends Thread {
 
                 work(reciveMsg);
 
-                sleep(1000);
+                sleep(30000);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -87,7 +87,7 @@ public class Worker extends Thread {
     }
 
     private void work(BaseMessage reciveMsg) {
-        TempNew.NotifyRequest notifyRequest = TempNew.NotifyRequest.newBuilder()
+        TemperatureProtocol.NotifyRequest notifyRequest = TemperatureProtocol.NotifyRequest.newBuilder()
                 .setCurrent(Math.abs(random.nextFloat()) % 20)
 
                 .build();

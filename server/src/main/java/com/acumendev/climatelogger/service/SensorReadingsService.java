@@ -4,7 +4,6 @@ package com.acumendev.climatelogger.service;
 import com.acumendev.climatelogger.input.api.dto.InputValueDto;
 import com.acumendev.climatelogger.repository.SensorReadingsRepository;
 import com.acumendev.climatelogger.repository.SensorRepository;
-import com.acumendev.climatelogger.repository.dbo.ActiveSensorDbo;
 import com.acumendev.climatelogger.repository.dbo.SensorReadingsDbo;
 import com.acumendev.climatelogger.repository.dbo.mapper.ActiveSensorDboMapper;
 import com.acumendev.climatelogger.utils.JsonUtils;
@@ -58,10 +57,10 @@ public class SensorReadingsService {
                         .build());
 
                 sensorReadingsRepository.saveBatch(readingsDbos);
-                sensorRepository.updateActive(readingsDbos
-                        .stream()
-                        .map(ActiveSensorDboMapper::map)
-                        .collect(Collectors.toList()));
+//                sensorRepository.updateActive(readingsDbos
+//                        .stream()
+//                        .map(ActiveSensorDboMapper::map)
+//                        .collect(Collectors.toList()));
                 break;
             }
             default: {

@@ -1,6 +1,7 @@
 package com.acumen.tcp;
 
-import com.acumen.tcp.dto_new.TempNew;
+
+import com.acumen.tcp.dto_new.TemperatureProtocol;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Service
 public class ConnectStore {
 
-    final LinkedBlockingQueue<TempNew.BaseMessage> queue = new LinkedBlockingQueue<>();
+    final LinkedBlockingQueue<TemperatureProtocol.BaseMessage> queue = new LinkedBlockingQueue<>();
 
     private ChannelHandlerContext ctx;
 

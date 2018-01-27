@@ -1,12 +1,16 @@
 package com.acumendev.climatelogger.config;
 
+import com.acumendev.climatelogger.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 /**
@@ -15,6 +19,12 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserRepository userRepository;
+
+    public SecurityConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
 
     @Override
@@ -27,21 +37,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(new RedirectHandler("/lk/index.html"))
                 .and()
                 .authorizeRequests()
-                .antMatchers("/lk/*","/api/*").authenticated().and()
+                .antMatchers("/lk/*", "/api/*").authenticated().and()
                 .csrf().disable();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .inMemoryAuthentication()
-                .withUser(User.withDefaultPasswordEncoder().username("akum").password("akum").roles("USER"));
+        ///UserDetailsService
+     /*   DaoAuthenticationProvider authProvider
+                = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(new UserDetailsServiceImpl(userRepository));
+        authProvider.setPasswordEncoder(new BCryptPasswordEncoder(5));
+        auth.authenticationProvider(authProvider);
+*/
+        auth.userDetailsService(new UserDetailsServiceImpl(userRepository))
+                .passwordEncoder(new BCryptPasswordEncoder(5));
+
+        //.withUser(CurrentUser.withDefaultPasswordEncoder().username("akum").password("akum").roles("USER")
     }
 
     private static class RedirectHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-        RedirectHandler(String url){
+        RedirectHandler(String url) {
             super.setDefaultTargetUrl(url);
         }
     }
-
 }

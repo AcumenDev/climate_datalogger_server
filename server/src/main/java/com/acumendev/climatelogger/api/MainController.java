@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @AllArgsConstructor
+
 public class MainController {
 
     private final SensorReadingsRepository sensorReadingsRepository;

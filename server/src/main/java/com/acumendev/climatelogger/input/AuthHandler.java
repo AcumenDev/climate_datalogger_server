@@ -1,45 +1,74 @@
 package com.acumendev.climatelogger.input;
 
-import com.acumendev.climatelogger.input.tcp.TempNew;
-import com.acumendev.climatelogger.service.SensorHandler;
+
+import com.acumendev.climatelogger.input.tcp.TemperatureProtocol;
+import com.acumendev.climatelogger.repository.dbo.SensorDbo;
+import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
+import com.acumendev.climatelogger.repository.temperature.TemperatureSettingRepository;
+import com.acumendev.climatelogger.service.SensorDescriptor;
+import com.acumendev.climatelogger.service.sensor.hadlers.SensorHandler;
+import com.acumendev.climatelogger.service.sensor.hadlers.TemperatureHandler;
+import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
 import java.util.Map;
 
 @Slf4j
 @Component
 public class AuthHandler {
-    private final Map<String, SensorHandler> sensorHandlers;
-    private HashSet<String> auth = new HashSet<>();
+    private final Map<SensorDescriptor, SensorDbo> sensorsEnadled;
 
-    public AuthHandler(Map<String, SensorHandler> sensorHandlers) {
+    private final Map<Long, SensorHandler> sensorsActiveSession;
 
-        this.sensorHandlers = sensorHandlers;
+    private final TemperatureReadingsRepository readingsRepository;
+    private final TemperatureSettingRepository settingRepository;
+
+    public AuthHandler(Map<SensorDescriptor, SensorDbo> sensorsEnadled,
+                       Map<Long, SensorHandler> sensorsActiveSession,
+                       TemperatureReadingsRepository readingsRepository,
+                       TemperatureSettingRepository settingRepository) {
+        this.sensorsEnadled = sensorsEnadled;
+        this.sensorsActiveSession = sensorsActiveSession;
+        this.readingsRepository = readingsRepository;
+        this.settingRepository = settingRepository;
     }
 
-    public boolean clientAuth(String channelId) {
+    public SensorHandler auth(Channel channel, String channelId, TemperatureProtocol.AuthRequest authRequest) {
+        SensorDescriptor sensorDescriptor = SensorDescriptor.builder()
+                .apiKey(authRequest.getApiKey())
+                .type(authRequest.getType())
+                .build();
+        SensorDbo sensorDbo = sensorsEnadled.get(sensorDescriptor);
 
-        return auth.contains(channelId);
-    }
+        if (sensorDbo != null) {
+            log.info("Авторизованн channelId {}  {}", channelId, authRequest);
 
-    public void disconnect(String channelId) {
-        auth.remove(channelId);
-    }
+            channel.writeAndFlush(TemperatureProtocol.BaseMessage.newBuilder().setType(TemperatureProtocol.PacketType.authResponse).setAuthResponse(TemperatureProtocol.AuthResponse.newBuilder().setState(0).build()).build());
+            SensorHandler handler = buildHandler(sensorDbo, channel);
 
-    public SensorHandler auth(String channelId, TempNew.AuthRequest authRequest) {
-        if (sensorHandlers.containsKey(authRequest.getApiKey())) {
-            SensorHandler handler = sensorHandlers.get(authRequest.getApiKey());
-
-            if (handler.getSensorType() == authRequest.getType() &&
-                    handler.getVersion() == authRequest.getVersion()) {
-                auth.add(channelId);
-                log.info("Авторизованн channelId {}  {}", channelId, authRequest);
+            if (handler != null) {
+                sensorsActiveSession.put(sensorDbo.getId(), handler);
                 return handler;
             }
         }
         log.warn("Не смогли авторизовать channelId {}  {}", channelId, authRequest);
         return null;
+    }
+
+    private SensorHandler buildHandler(SensorDbo sensorDbo, Channel channel) {
+
+        switch (sensorDbo.getType()) {
+            case 1: {
+                return new TemperatureHandler(sensorDbo, channel, readingsRepository, settingRepository);
+            }
+            default: {
+                log.error("Не смогли создать обработчик датчика {}", sensorDbo);
+            }
+        }
+        return null;
+    }
+    public void unregistered(SensorHandler handler) {
+        sensorsActiveSession.remove(handler.getSensorId());
     }
 }
