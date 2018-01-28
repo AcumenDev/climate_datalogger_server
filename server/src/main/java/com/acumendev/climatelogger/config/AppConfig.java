@@ -1,15 +1,18 @@
 package com.acumendev.climatelogger.config;
 
+import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.service.SensorDescriptor;
-import com.acumendev.climatelogger.service.sensor.hadlers.SensorHandler;
+import com.acumendev.climatelogger.service.sensor.SensorService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Configuration
 public class AppConfig {
@@ -34,11 +37,15 @@ public class AppConfig {
     }
 
 
-
     /////Сенсоры с активными сессиями до оборудования
     @Bean
     Map<Long, SensorHandler> sensorsActiveSession() {
         return new ConcurrentHashMap<>();
     }
 
+
+    @Bean
+    Map<Integer, SensorService> sensorsService(List<SensorService> services) {
+        return services.stream().collect(Collectors.toMap(SensorService::getType, Function.identity()));
+    }
 }

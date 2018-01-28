@@ -1,14 +1,11 @@
 $(function () {
 
-    Handlebars.registerHelper("prettifyDate", function(timestamp) {
+    Handlebars.registerHelper("prettifyDate", function (timestamp) {
         return new Date(timestamp).toLocaleString("ru-RU")
     });
 
 
-
-
     loadSensors();
-
 
 
     google.charts.load('current', {
@@ -21,8 +18,8 @@ $(function () {
 
         $.ajax({
             method: "GET",
-            url: "/api/readings/login",
-            data: { type: "1"}
+            url: "/api/readings",
+            data: {sensor_id: "2", sensor_type: 1}
         })
             .done(function (response) {
                 // alert("Data Saved: " + msg);
@@ -41,14 +38,14 @@ $(function () {
                 }
 
 
-             /*         data.addRows([
-                          [new Date(2017, 12, 21, 12, 30, 0), 18.59],
-                          [new Date(2017, 12, 21, 12, 31, 0), 17.59],
-                          [new Date(2017, 12, 21, 12, 32, 0), 16.59],
-                          [new Date(2017, 12, 21, 12, 33, 0), 15.59],
-                          [new Date(2017, 12, 21, 12, 34, 0), 14.59],
-                          [new Date(2017, 12, 21, 12, 35, 0), 14.59]
-                      ]);*/
+                /*         data.addRows([
+                             [new Date(2017, 12, 21, 12, 30, 0), 18.59],
+                             [new Date(2017, 12, 21, 12, 31, 0), 17.59],
+                             [new Date(2017, 12, 21, 12, 32, 0), 16.59],
+                             [new Date(2017, 12, 21, 12, 33, 0), 15.59],
+                             [new Date(2017, 12, 21, 12, 34, 0), 14.59],
+                             [new Date(2017, 12, 21, 12, 35, 0), 14.59]
+                         ]);*/
 
 
                 var options = {
@@ -59,7 +56,7 @@ $(function () {
                         title: 'Значение'
                     },
                     width: 1000,
-                    height: 200
+                    height: 400
                 };
 
                 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));

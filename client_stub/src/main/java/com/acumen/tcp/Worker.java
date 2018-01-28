@@ -72,6 +72,7 @@ public class Worker extends Thread {
                     // request
 
                     System.out.println("send AuthRequest ");
+                    sleep(10000);
                     continue;
                 }
 

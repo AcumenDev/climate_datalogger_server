@@ -15,7 +15,7 @@ logging:
  level:
   io.netty.handler: TRACE
   org.springframework.web: WARN
-  org.springframework.security: TRACE
+  org.springframework.security: WARN
 
 ---
 

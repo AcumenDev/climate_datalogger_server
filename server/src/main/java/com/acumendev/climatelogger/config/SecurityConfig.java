@@ -26,12 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userRepository = userRepository;
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .formLogin()
-                .loginPage("/authentication/login.html")
+                .loginPage("/")
                 .failureUrl("/authentication/login.html?failed")
                 .loginProcessingUrl("/authentication/process")
                 .successHandler(new RedirectHandler("/lk/index.html"))

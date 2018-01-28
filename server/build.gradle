@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     compile group: 'org.projectlombok', name: 'lombok'
+    compile("org.springframework.boot:spring-boot-devtools")
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'

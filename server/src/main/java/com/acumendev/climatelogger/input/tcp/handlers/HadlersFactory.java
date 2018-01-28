@@ -1,6 +1,4 @@
-package com.acumendev.climatelogger.service.sensor.hadlers;
-
-import com.acumendev.climatelogger.service.SensorDescriptor;
+package com.acumendev.climatelogger.input.tcp.handlers;
 
 public class HadlersFactory {
 

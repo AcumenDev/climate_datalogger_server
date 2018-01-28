@@ -1,7 +1,6 @@
 package com.acumen;
 
 
-import com.acumen.dto.InputValueDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -16,7 +15,7 @@ import java.util.stream.DoubleStream;
  * Created by vladimir akummail@gmail.com on 1/2/18.
  */
 @Slf4j
-@Component
+//@Component
 public class EspClient extends Thread  {
 
     private final RestTemplate restTemplate;
@@ -44,17 +43,17 @@ public class EspClient extends Thread  {
                  DoubleStream humidity = random.doubles(50, 99);
                  DoubleStream temperature = random.doubles(0, 30);
                  DoubleStream pressure = random.doubles(10000, 99999);
-                InputValueDto inputValueDto = InputValueDto.builder()
-                        .user("akum")
-                        .number(1)
-                        .type(4)
-                        .rommNumber(1)
-                        .data(InputValueDto.Data.builder()
-                                .humidity(humidity.findFirst().getAsDouble())
-                                .temperature(temperature.findFirst().getAsDouble())
-                                .pressure(pressure.findFirst().getAsDouble())
-                                .build())
-                        .build();
+//                InputValueDto inputValueDto = InputValueDto.builder()
+//                        .user("akum")
+//                        .number(1)
+//                        .type(4)
+//                        .rommNumber(1)
+//                        .data(InputValueDto.Data.builder()
+//                                .humidity(humidity.findFirst().getAsDouble())
+//                                .temperature(temperature.findFirst().getAsDouble())
+//                                .pressure(pressure.findFirst().getAsDouble())
+//                                .build())
+//                        .build();
 
                // restTemplate.postForEntity(url, inputValueDto, String.class);
 

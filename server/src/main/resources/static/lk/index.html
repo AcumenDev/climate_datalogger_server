@@ -1,64 +1,105 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <title>Redis Cluster Monitor</title>
-    <meta name="description" content="DataLogger">
-    <meta name="" content="Redis Cluster">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Mobile Specific Meta -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <!-- Latest compiled and minified CSS -->
-    <script
-            src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <link rel="stylesheet" href="/lib/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/index.css">
-    <script src="/lib/jquery/jquery.min.js"></script>
-    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/lib/handlebars/handlebars.min.js"></script>
-    <script src="/js/lk//index.js"></script>
-</head>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
 
+    <link rel="stylesheet" href="/css/lk/index.css">
+    <script src="/lib/handlebars/handlebars.min.js"></script>
+
+
+    <script src="/js/lk/index.js"></script>
+    <title>Climat Control</title>
+</head>
 <body>
 
 
-<div id="content" class="container">
-    <div id="chart_div">
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand" href="/index.html">Климат контроль</a>
+    <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">Akum </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Настройки</a>
+            <a class="dropdown-item" href="#">Выход</a>
+        </div>
     </div>
+</nav>
 
-    <div id="sensors">
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <span>Включенные датчики</span>
+            <div id="sensors">
+            </div>
+
+        </div>
+        <div class="col-10">
+            <div id="chart_div">
+            </div>
+        </div>
     </div>
 
 </div>
 
 
 <script id="sensors-blank" type="text/x-handlebars-template">
-    <div class="panel panel-default panel-info">
-        <div class="table-responsive">
-            <table class="table table-hover table-info">
-                <tr>
-                    <th>room</th>
-                    <th>num</th>
-                    <th>type</th>
-                    <th>lastActiveTime</th>
 
-                </tr>
+    <ul class="list-group">
 
-                {{#each this}}
-                <tr class="nodeData">
-                    <td class="room">{{room}}</td>
-                    <td class="num">{{num}}</td>
-                    <td class="type">{{type}}</td>
-                    <td class="lastActiveTime">{{prettifyDate lastActiveTime}}</td>
-                </tr>
-                {{/each}}
-            </table>
-        </div>
-    </div>
+        {{#each this}}
+        <tr class="nodeData">
+            <!--       <td class="room">{{room}}</td>
+                   <td class="num">{{num}}</td>
+                   <td class="type">{{type}}</td>
+                   <td class="lastActiveTime">{{prettifyDate lastActiveTime}}</td>
+       -->
+            <li class="list-group-item">{{name}} {{prettifyDate lastActiveTime}}</li>
+
+        </tr>
+        {{/each}}
+
+        <!--
+                <li class="list-group-item active">Cras justo odio</li>
+                <li class="list-group-item">Dapibus ac facilisis in</li>
+                <li class="list-group-item">Morbi leo risus</li>
+                <li class="list-group-item">Porta ac consectetur ac</li>
+                <li class="list-group-item">Vestibulum at eros</li>-->
+    </ul>
+
+
+    <!-- <div class="panel panel-default panel-info">
+         <div class="table-responsive">
+             <table class="table table-hover table-info">
+                 <tr>
+                     <th>room</th>
+                     <th>num</th>
+                     <th>type</th>
+                     <th>lastActiveTime</th>
+
+                 </tr>
+
+
+             </table>
+         </div>
+     </div>-->
 </script>
+
+
 </body>
+
 </html>

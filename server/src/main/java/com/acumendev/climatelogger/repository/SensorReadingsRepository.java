@@ -54,7 +54,7 @@ public class SensorReadingsRepository {
 
     }
 
-    public List<SensorReadingsDbo> findByLoginAndType(String login, Integer type) {
+    public List<SensorReadingsDbo> findByIdAndUserId(String login, Integer type) {
 
         return jdbcTemplate.query(queryFindByLoginAndType,
                 new MapSqlParameterSource()

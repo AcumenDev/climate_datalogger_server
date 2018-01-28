@@ -1,6 +1,6 @@
 package com.acumendev.climatelogger.input.tcp;
 
-import com.acumendev.climatelogger.service.sensor.hadlers.SensorHandler;
+import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,7 +1,7 @@
 package com.acumendev.climatelogger.input.tcp;
 
 import com.acumendev.climatelogger.input.AuthHandler;
-import com.acumendev.climatelogger.service.sensor.hadlers.SensorHandler;
+import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +55,7 @@ public class TcpHandler extends SimpleChannelInboundHandler<TemperatureProtocol.
             SensorHandler handler = authHandler.auth(ctx.channel(), id, authRequest);
             if (handler != null) {
                 tcpSensorHandlers.put(id, handler);
+                handler.init();
             }else {
                 ctx.channel().close();
             }

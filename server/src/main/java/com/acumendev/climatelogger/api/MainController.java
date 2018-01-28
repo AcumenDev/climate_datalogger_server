@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class MainController {
 
-    private final SensorReadingsRepository sensorReadingsRepository;
+/*    private final SensorReadingsRepository sensorReadingsRepository;
 
     @GetMapping(path = "/api/readings")
     public ReadingsDto readings(Principal principal,
@@ -66,5 +66,5 @@ public class MainController {
 
         readingsDto.setData(data);
         return readingsDto;
-    }
+    }*/
 }

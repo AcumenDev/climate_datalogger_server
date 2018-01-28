@@ -1,7 +1,7 @@
 package com.acumendev.climatelogger.input.tcp;
 
 import com.acumendev.climatelogger.input.AuthHandler;
-import com.acumendev.climatelogger.service.sensor.hadlers.SensorHandler;
+import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;

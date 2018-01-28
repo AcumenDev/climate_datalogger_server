@@ -1,8 +1,7 @@
-package com.acumendev.climatelogger.service.sensor.hadlers;
+package com.acumendev.climatelogger.input.tcp.handlers;
 
 
 import com.acumendev.climatelogger.input.tcp.TemperatureProtocol;
-import io.netty.channel.Channel;
 
 public interface SensorHandler {
 
@@ -12,5 +11,5 @@ public interface SensorHandler {
 
     void procces(TemperatureProtocol.BaseMessage msg);
 
-    void init(Channel channel);
+    void init();
 }

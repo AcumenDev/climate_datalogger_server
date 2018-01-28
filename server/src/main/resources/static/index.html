@@ -1,33 +1,62 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <title>DataLogger Monitor</title>
-    <meta name="description" content="DataLogger">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Mobile Specific Meta -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <!-- Latest compiled and minified CSS -->
-    <script
-            src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+
     <link rel="stylesheet" href="css/index.css">
-    <script src="lib/jquery/jquery.min.js"></script>
-    <script src="lib/bootstrap/js/bootstrap.min.js"></script>
     <script src="lib/handlebars/handlebars.min.js"></script>
 
-</head>
 
+    <script src="js/index.js"></script>
+    <title>Climat Control</title>
+</head>
 <body>
 
-<a href="/authentication/login.html"> Логин</a>
-<a href="http://localhost:8080/api/sensors">Сенсоры</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/index.html">Климат контроль</a>
+     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">О системе <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" id="login-form" action="/authentication/process">
+            <input name="username" class="form-control mr-sm-2" type="text" placeholder="Логин" value="akum">
+            <input name="password" class="form-control mr-sm-2" type="password" placeholder="Пароль" value="test">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Вход</button>
+        </form>
+    </div>
+</nav>
 
+
+<div class="container-fluid">
+    <!-- Content here -->
+
+    <ul>
+        <li>
+            <a href="/authentication/login.html"> Логин</a>
+        </li>
+        <li>
+            <a href="http://localhost:8080/api/sensors">Сенсоры</a>
+        </li>
+    </ul>
+</div>
 
 
 </body>
+
 </html>

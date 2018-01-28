@@ -6,9 +6,13 @@ import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 public class SensorDtoMapper {
     public static SensorDto map(SensorDbo dbo) {
         return SensorDto.builder()
+                .id(dbo.getId())
+                .userId(dbo.getUserId())
+                .name(dbo.getName())
                 .num(dbo.getNum())
-               // .room(dbo.getRoom())
                 .type(dbo.getType())
+                .apiKey(dbo.getApiKey())
+                .description(dbo.getDescription())
                 .lastActiveTime(dbo.getLastActiveDateTime())
                 .build();
     }

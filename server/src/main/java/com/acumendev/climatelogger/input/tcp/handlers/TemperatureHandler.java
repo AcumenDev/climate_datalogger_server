@@ -1,4 +1,4 @@
-package com.acumendev.climatelogger.service.sensor.hadlers;
+package com.acumendev.climatelogger.input.tcp.handlers;
 
 import com.acumendev.climatelogger.input.tcp.TemperatureProtocol;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
@@ -31,9 +31,9 @@ public class TemperatureHandler implements SensorHandler {
     }
 
     @Override
-    public void init(Channel channel) {
-        channel.writeAndFlush(TemperatureProtocol.BaseMessage.newBuilder()
-                .setType(TemperatureProtocol.PacketType.getActualConfig).build());
+    public void init() {
+//        channel.writeAndFlush(TemperatureProtocol.BaseMessage.newBuilder()
+//                .setType(TemperatureProtocol.PacketType.getActualConfig).build());
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ReadingsDto {
+
     List<Data> data;
     String login;
     Integer type;
