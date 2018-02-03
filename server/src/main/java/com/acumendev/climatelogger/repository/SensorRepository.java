@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SensorRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final String insertReadings = "UPDATE sensor SET last_active_date_time = :last_active_date_time WHERE id=:id;";
+    private final String updateActiveTime = "UPDATE sensor SET last_active_date_time = :last_active_date_time WHERE id=:id;";
     private final String selectByLogin = "SELECT * FROM sensor WHERE user_id = :user_id;";
 
     private final String selectEnabled = "SELECT * FROM sensor WHERE state = TRUE;";
@@ -30,7 +30,15 @@ public class SensorRepository {
                     .addValue("id", item)
                     .addValue("last_active_date_time", new Timestamp(time));
         }
-        jdbcTemplate.batchUpdate(insertReadings, mapSqlParameterSource);
+        jdbcTemplate.batchUpdate(updateActiveTime, mapSqlParameterSource);
+    }
+
+
+    public void updateActive(long sensorsId, long time) {
+        jdbcTemplate.update(updateActiveTime,
+                new MapSqlParameterSource("id", sensorsId)
+                        .addValue("last_active_date_time",
+                                new Timestamp(time)));
     }
 
     public List<SensorDbo> getAllByUserId(long userId) {

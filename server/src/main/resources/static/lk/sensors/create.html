@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+    <script src="/lib/handlebars/handlebars.min.js"></script>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/lk/sensors/create.js"></script>
+    <title>Climat Control</title>
+</head>
+<body>
+
+
+<nav class="navbar navbar-light bg-light navbar-expand-lg">
+    <a class="navbar-brand" href="#">Климат контроль</a>
+    <ul class="navbar-nav mr-auto ">
+        <li class="nav-item">
+            <a class="nav-link" href="/lk/index.html">Рабочий стол</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link  active" href="/lk/sensors/list.html">Датчики</a>
+        </li>
+    </ul>
+
+    <ul class="navbar-nav mr-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">Login </a>
+            <div class="dropdown-menu mr-4" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Настройки</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Выход</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<!--
+private final String name;
+private final int type;
+private final int num;
+private final String description;
+private final boolean state;
+-->
+
+<div class="container-fluid">
+    <form name="create" action="">
+        <div class="form-group row">
+            <label for="inputName" class="col-sm-1 col-form-label">Название</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="name" id="inputName" placeholder="">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputType"  class="col-sm-1 col-form-label">Тип</label>
+            <div class="col-sm-3">
+                <select class="form-control" name="type" id="inputType">
+                    <option value="1">Контроллер температуры</option>
+                    <option value="2">Контроллер влажности</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="inputNum" class="col-sm-1 col-form-label">Номер комнаты</label>
+            <div class="col-sm-3">
+                <input type="text" name="num" class="form-control" id="inputNum" placeholder="">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="inputDescription" class="col-sm-1 col-form-label">Описание</label>
+            <div class="col-sm-3">
+                <input type="text" name="description" class="form-control" id="inputDescription" placeholder="">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-1">Включен</div>
+            <div class="col-sm-3">
+                <div class="form-check">
+                    <input class="form-check-input" name="state" type="checkbox" id="gridCheck1">
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+</body>
+</html>

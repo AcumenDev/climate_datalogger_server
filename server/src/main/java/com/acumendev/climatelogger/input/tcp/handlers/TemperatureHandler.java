@@ -1,6 +1,7 @@
 package com.acumendev.climatelogger.input.tcp.handlers;
 
 import com.acumendev.climatelogger.input.tcp.TemperatureProtocol;
+import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureSettingRepository;
@@ -16,18 +17,21 @@ public class TemperatureHandler implements SensorHandler {
     private final SensorDbo sensorDbo;
     private final TemperatureReadingsRepository readingsRepository;
     private final TemperatureSettingRepository settingRepository;
+    private final SensorRepository sensorRepository;
     private final Channel channel;
 
     public TemperatureHandler(SensorDbo sensorDbo,
                               Channel channel,
                               TemperatureReadingsRepository readingsRepository,
-                              TemperatureSettingRepository settingRepository) {
+                              TemperatureSettingRepository settingRepository,
+                              SensorRepository sensorRepository) {
 
         this.sensorDbo = sensorDbo;
         this.channel = channel;
         this.readingsRepository = readingsRepository;
         this.settingRepository = settingRepository;
 
+        this.sensorRepository = sensorRepository;
     }
 
     @Override
@@ -46,6 +50,11 @@ public class TemperatureHandler implements SensorHandler {
 
     }
 
+    private void updateLastActiveTime() {
+        sensorRepository.updateActive(sensorDbo.getId(), System.currentTimeMillis());
+
+    }
+
     @Override
     public void procces(TemperatureProtocol.BaseMessage msg) {
         switch (msg.getType()) {
@@ -61,6 +70,7 @@ public class TemperatureHandler implements SensorHandler {
                         .build();
                 readingsRepository.add(dbo);
                 channel.writeAndFlush(TemperatureProtocol.BaseMessage.newBuilder().setType(TemperatureProtocol.PacketType.notifyResponse).build());
+                updateLastActiveTime();
                 return;
             }
 
@@ -73,6 +83,7 @@ public class TemperatureHandler implements SensorHandler {
                         .build();
 
                 settingRepository.update(settingsDbo);
+                updateLastActiveTime();
                 return;
             }
             case configChanges: {
@@ -90,7 +101,7 @@ public class TemperatureHandler implements SensorHandler {
 
                 settingRepository.update(settingsDbo);*/
 
-
+                updateLastActiveTime();
                 return;
             }
             default: {

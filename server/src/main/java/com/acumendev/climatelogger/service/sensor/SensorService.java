@@ -1,7 +1,6 @@
 package com.acumendev.climatelogger.service.sensor;
 
-import com.acumendev.climatelogger.api.dto.ReadingsDto;
-import com.acumendev.climatelogger.config.CurrentUser;
+import com.acumendev.climatelogger.type.CurrentUser;
 
 public interface SensorService<T> {
     int getType();

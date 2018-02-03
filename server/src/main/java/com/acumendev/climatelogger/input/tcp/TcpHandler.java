@@ -41,7 +41,7 @@ public class TcpHandler extends SimpleChannelInboundHandler<TemperatureProtocol.
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TemperatureProtocol.BaseMessage msg) {
         String id = ctx.channel().id().asLongText();
-        log.info("ChannelRead {}\n {}", id, msg.toString());
+        log.debug("ChannelRead {}\n {}", id, msg.toString());
 
         if (tcpSensorHandlers.containsKey(id)) {
             tcpSensorHandlers.get(id).procces(msg);

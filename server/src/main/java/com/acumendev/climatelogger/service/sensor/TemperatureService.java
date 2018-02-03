@@ -1,7 +1,7 @@
 package com.acumendev.climatelogger.service.sensor;
 
 
-import com.acumendev.climatelogger.config.CurrentUser;
+import com.acumendev.climatelogger.type.CurrentUser;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.dto.ReadingDbo;
 import com.acumendev.climatelogger.service.sensor.dto.TemperatureReadings;

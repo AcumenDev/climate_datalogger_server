@@ -1,15 +1,12 @@
 package com.acumendev.climatelogger.config;
 
-import com.acumendev.climatelogger.repository.UserRepository;
+import com.acumendev.climatelogger.service.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
@@ -20,10 +17,10 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserRepository userRepository;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public SecurityConfig(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -42,14 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        ///UserDetailsService
-     /*   DaoAuthenticationProvider authProvider
-                = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(new UserDetailsServiceImpl(userRepository));
-        authProvider.setPasswordEncoder(new BCryptPasswordEncoder(5));
-        auth.authenticationProvider(authProvider);
-*/
-        auth.userDetailsService(new UserDetailsServiceImpl(userRepository))
+        auth.userDetailsService(userDetailsService)
                 .passwordEncoder(new BCryptPasswordEncoder(5));
 
         //.withUser(CurrentUser.withDefaultPasswordEncoder().username("akum").password("akum").roles("USER")

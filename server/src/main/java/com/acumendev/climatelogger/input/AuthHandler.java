@@ -2,6 +2,7 @@ package com.acumendev.climatelogger.input;
 
 
 import com.acumendev.climatelogger.input.tcp.TemperatureProtocol;
+import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureSettingRepository;
@@ -23,15 +24,17 @@ public class AuthHandler {
 
     private final TemperatureReadingsRepository readingsRepository;
     private final TemperatureSettingRepository settingRepository;
+    private final SensorRepository sensorRepository;
 
     public AuthHandler(Map<SensorDescriptor, SensorDbo> sensorsEnadled,
                        Map<Long, SensorHandler> sensorsActiveSession,
                        TemperatureReadingsRepository readingsRepository,
-                       TemperatureSettingRepository settingRepository) {
+                       TemperatureSettingRepository settingRepository, SensorRepository sensorRepository) {
         this.sensorsEnadled = sensorsEnadled;
         this.sensorsActiveSession = sensorsActiveSession;
         this.readingsRepository = readingsRepository;
         this.settingRepository = settingRepository;
+        this.sensorRepository = sensorRepository;
     }
 
     public SensorHandler auth(Channel channel, String channelId, TemperatureProtocol.AuthRequest authRequest) {
@@ -60,7 +63,7 @@ public class AuthHandler {
 
         switch (sensorDbo.getType()) {
             case 1: {
-                return new TemperatureHandler(sensorDbo, channel, readingsRepository, settingRepository);
+                return new TemperatureHandler(sensorDbo, channel, readingsRepository, settingRepository, sensorRepository);
             }
             default: {
                 log.error("Не смогли создать обработчик датчика {}", sensorDbo);

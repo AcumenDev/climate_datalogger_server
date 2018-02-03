@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Map;
 
 @Slf4j
@@ -24,6 +25,7 @@ public class TcpServer extends Thread {
 
     private final Map<String, SensorHandler> sensorHandlers;
     private final AuthHandler authHandler;
+    private ChannelFuture future;
 
     public TcpServer(Map<String, SensorHandler> sensorHandlers,
                      AuthHandler authHandler) {
@@ -56,13 +58,27 @@ public class TcpServer extends Thread {
                         }
                     }).option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
-            ChannelFuture f = b.bind(9999).sync();
-            f.channel().closeFuture().awaitUninterruptibly().sync();
+            future = b.bind(9999).sync();
+            future.channel().closeFuture().awaitUninterruptibly().sync();
+
         } catch (Exception e) {
             log.error("Ошбка сервера tcp", e);
+
         } finally {
+
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
+        }
+    }
+
+    @PreDestroy
+    private void destroyServer() {
+        try {
+            log.info("Остановка сервера tcp {}", future);
+            future.channel().disconnect();
+            future.channel().close();
+        } catch (Exception e) {
+            log.error("Ошбка остановки сервера tcp", e);
         }
     }
 }

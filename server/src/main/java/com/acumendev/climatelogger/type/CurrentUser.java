@@ -1,4 +1,4 @@
-package com.acumendev.climatelogger.config;
+package com.acumendev.climatelogger.type;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
