@@ -1,10 +1,12 @@
 package com.acumendev.climatelogger.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SensorDto {
     private final long id;
     private final long userId;
@@ -15,4 +17,5 @@ public class SensorDto {
     private final boolean state;
     private final String apiKey;
     private final Long lastActiveTime;
+    private final long createTime;
 }

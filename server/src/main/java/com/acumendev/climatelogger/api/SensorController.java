@@ -10,10 +10,7 @@ import com.acumendev.climatelogger.type.CurrentUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,13 +31,18 @@ public class SensorController {
     }
 
     @PostMapping(path = "/api/sensors")
-    public BaseResponse create(@RequestBody SensorCreateDto dto) {
+    public BaseResponse create(@AuthenticationPrincipal CurrentUser user, @RequestBody SensorCreateDto dto) {
         try {
-            sensorManager.create(dto);
+            sensorManager.create(user, dto);
         } catch (Exception e) {
             log.error("Ошибка при создании датчика {} {}", dto, e);
             return BaseResponse.error(1, "Ошибка при создании датчика.");
         }
         return BaseResponse.ok();
+    }
+
+    @GetMapping(path = "/api/sensors/{id}")
+    public BaseResponse getSensors(@AuthenticationPrincipal CurrentUser user, @PathVariable("id") long id) {
+        return BaseResponse.ok(SensorDtoMapper.map(sensorRepository.getByIdAndUserId(id, user.getId())));
     }
 }

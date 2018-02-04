@@ -13,9 +13,6 @@ public class TemperatureSettingRepository {
     }
 
     public void update(TempSettingsDbo settingsDbo){
-
        // jdbcTemplate.update("",)
-
-
     }
 }

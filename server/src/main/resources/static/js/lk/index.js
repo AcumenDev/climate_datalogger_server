@@ -29,20 +29,7 @@ $(function () {
                 for (var i = 0; i < values.length; ++i) {
                     var item = values[i];
                     data.addRow([new Date(item.dateTime), item.value]);
-
                 }
-
-
-                /*         data.addRows([
-                             [new Date(2017, 12, 21, 12, 30, 0), 18.59],
-                             [new Date(2017, 12, 21, 12, 31, 0), 17.59],
-                             [new Date(2017, 12, 21, 12, 32, 0), 16.59],
-                             [new Date(2017, 12, 21, 12, 33, 0), 15.59],
-                             [new Date(2017, 12, 21, 12, 34, 0), 14.59],
-                             [new Date(2017, 12, 21, 12, 35, 0), 14.59]
-                         ]);*/
-
-
                 var options = {
                     hAxis: {
                         title: 'Время'

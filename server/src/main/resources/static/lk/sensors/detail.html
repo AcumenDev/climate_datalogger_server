@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="/lib/Chart.js/Chart.js"></script>
+
+    <script src="/lib/handlebars/handlebars.min.js"></script>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/lk/sensors/detail.js"></script>
+    <title>Climat Control</title>
+</head>
+<body>
+
+
+<nav class="navbar navbar-light bg-light navbar-expand-lg">
+    <a class="navbar-brand" href="#">Климат контроль</a>
+    <ul class="navbar-nav mr-auto ">
+        <li class="nav-item">
+            <a class="nav-link" href="/lk/index.html">Рабочий стол</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link  active" href="/lk/sensors/list.html">Датчики</a>
+        </li>
+    </ul>
+
+    <ul class="navbar-nav mr-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">Login </a>
+            <div class="dropdown-menu mr-4" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Настройки</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Выход</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-1">
+            <span>Датчик</span>
+            <div id="main">
+            </div>
+
+        </div>
+
+        <div class="col-1">
+            <span>Датчики</span>
+            <div id="sensor-control">
+            </div>
+
+        </div>
+        <div class="col-10">
+           <!-- <canvas id="myChart" width="400" height="400"></canvas>-->
+            <canvas id="chart_div">
+            </canvas>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+
+<script id="sensors-detail" type="text/x-handlebars-template">
+
+    <div class="row">
+        <div class="col-sm-1">Id</div>
+        <div class="col-sm-3">{{id}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">Название</div>
+        <div class="col-sm-3">{{name}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">Тип</div>
+        <div class="col-sm-3">{{type}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">Номер комнаты</div>
+        <div class="col-sm-3">{{num}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">Статус</div>
+        <div class="col-sm-3">{{state}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">Описание</div>
+        <div class="col-sm-3">{{description}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">Ключ доступа</div>
+        <div class="col-sm-3">{{apiKey}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">Время создания</div>
+        <div class="col-sm-3">{{prettifyDate createTime}}</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-1">Время последний сесии</div>
+        <div class="col-sm-3">{{prettifyDate lastActiveTime}}</div>
+    </div>
+
+
+</script>
+
+
+</html>

@@ -33,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(new RedirectHandler("/lk/index.html"))
                 .and()
                 .authorizeRequests()
-                .antMatchers("/lk/*", "/api/*").authenticated().and()
+                .antMatchers("/lk/**", "/api/**").authenticated().and()
                 .csrf().disable();
     }
 

@@ -15,6 +15,5 @@ public class SensorDbo {
     private final Long lastActiveDateTime;
     private final boolean state;
     private final String apiKey;
-
-
+    private final long createTime;
 }

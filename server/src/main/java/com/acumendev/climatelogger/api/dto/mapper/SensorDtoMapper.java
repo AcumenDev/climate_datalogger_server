@@ -11,9 +11,11 @@ public class SensorDtoMapper {
                 .name(dbo.getName())
                 .num(dbo.getNum())
                 .type(dbo.getType())
+                .state(dbo.isState())
                 .apiKey(dbo.getApiKey())
                 .description(dbo.getDescription())
                 .lastActiveTime(dbo.getLastActiveDateTime())
+                .createTime(dbo.getCreateTime())
                 .build();
     }
 }

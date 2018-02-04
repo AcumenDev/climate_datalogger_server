@@ -19,6 +19,10 @@ public class SensorRepository {
     private final String selectByLogin = "SELECT * FROM sensor WHERE user_id = :user_id;";
 
     private final String selectEnabled = "SELECT * FROM sensor WHERE state = TRUE;";
+    private final String insertSensor = "INSERT INTO sensor (user_id, name, num, type, api_key, description,create_time, state) " +
+            "VALUES (:userId, :name, :num, :type, :apiKey, :description, :createTime, :state) RETURNING * ;";
+
+    private final String selectByIdAndUserId = "SELECT * FROM sensor WHERE id=:id AND user_id = :user_id;";
 
 
     public void updateActive(List<Long> sensorsIds) {
@@ -32,7 +36,6 @@ public class SensorRepository {
         }
         jdbcTemplate.batchUpdate(updateActiveTime, mapSqlParameterSource);
     }
-
 
     public void updateActive(long sensorsId, long time) {
         jdbcTemplate.update(updateActiveTime,
@@ -56,6 +59,8 @@ public class SensorRepository {
                 .type(rs.getInt("type"))
                 .apiKey(rs.getString("api_key"))
                 .description(rs.getString("description"))
+                .state(rs.getBoolean("state"))
+                .createTime(rs.getTimestamp("create_time").getTime())
                 .lastActiveDateTime(
                         rs.getTimestamp("last_active_date_time") != null ?
                                 rs.getTimestamp("last_active_date_time").getTime()
@@ -65,5 +70,28 @@ public class SensorRepository {
 
     public List<SensorDbo> getEnabled() {
         return jdbcTemplate.query(selectEnabled, (rs, rowNum) -> build(rs));
+    }
+
+    public SensorDbo add(SensorDbo sensorDbo) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("userId", sensorDbo.getUserId())
+                .addValue("name", sensorDbo.getName())
+                .addValue("num", sensorDbo.getNum())
+                .addValue("type", sensorDbo.getType())
+                .addValue("apiKey", sensorDbo.getApiKey())
+                .addValue("description", sensorDbo.getDescription())
+                .addValue("createTime", new Timestamp(sensorDbo.getCreateTime()))
+                .addValue("state", sensorDbo.isState());
+        return jdbcTemplate.queryForObject(insertSensor, parameterSource, (rs, rowNum) -> build(rs));
+    }
+
+    public SensorDbo getByIdAndUserId(long sensorsId, long userId) {
+        return jdbcTemplate.queryForObject(selectByIdAndUserId,
+                new MapSqlParameterSource()
+                        .addValue("id", sensorsId)
+                        .addValue("user_id", userId),
+                (rs, rowNum) -> build(rs));
+
+
     }
 }

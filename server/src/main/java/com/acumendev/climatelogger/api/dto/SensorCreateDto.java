@@ -11,5 +11,4 @@ public class SensorCreateDto {
     private int type;
     private String description;
     private boolean state;
-    private String apiKey;
 }
