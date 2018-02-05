@@ -42,18 +42,18 @@ $(function () {
                          randomScalingFactor(),
                          randomScalingFactor()*/
                     ],
-                    fill: false,
+                    fill: false
                 }]
             },
             options: {
                 responsive: true,
                 title: {
                     display: true,
-                    text: 'Chart.js Line Chart'
+                    text: ''
                 },
                 tooltips: {
                     mode: 'index',
-                    intersect: false,
+                    intersect: false
                 },
                 hover: {
                     mode: 'nearest',

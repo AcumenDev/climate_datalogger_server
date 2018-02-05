@@ -16,6 +16,8 @@ logging:
   io.netty.handler: TRACE
   org.springframework.web: WARN
   org.springframework.security: WARN
+  org.postgresql.jdbc: DEBUG
+  org.springframework.jdbc: TRACE
 
 ---
 

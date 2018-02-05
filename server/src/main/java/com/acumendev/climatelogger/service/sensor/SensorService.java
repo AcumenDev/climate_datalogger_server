@@ -6,4 +6,6 @@ public interface SensorService<T> {
     int getType();
 
     T getReadings(CurrentUser user, long sensorId);
+
+    T getReadings(CurrentUser user, long sensorId, long from, long to, int i);
 }

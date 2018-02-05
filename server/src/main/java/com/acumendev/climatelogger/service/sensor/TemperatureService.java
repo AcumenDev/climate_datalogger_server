@@ -40,5 +40,20 @@ public class TemperatureService implements SensorService<List<TemperatureReading
         ).collect(Collectors.toList());
     }
 
+    @Override
+    public List<TemperatureReadings> getReadings(CurrentUser user, long sensorId, long from, long to, int i) {
+        List<ReadingDbo> readingDbos = readingsRepository.findByIdAndUserIdInInterval(sensorId, user.getId(), i, from, to);
+
+        return readingDbos.stream().map(readingDbo ->
+                TemperatureReadings.builder()
+                        .value(readingDbo.getValue())
+                       // .coolingState(readingDbo.isCoolingState())
+                        //.heatingState(readingDbo.isHeatingState())
+                        .dateTime(readingDbo.getTimeStamp())
+                        .build()
+
+        ).collect(Collectors.toList());
+    }
+
 
 }

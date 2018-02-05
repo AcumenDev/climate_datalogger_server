@@ -28,6 +28,11 @@ public class ReadingsController {
         //log.warn("{} {} {} {} {}", user.getId(),sensorId,sensorType, from, to);
 
         SensorService service = sensorsService.get(sensorType);
+
+        if (from != null) {
+            return BaseResponse.ok(service.getReadings(user, sensorId, from, to, 500));
+        }
+
         return BaseResponse.ok(service.getReadings(user, sensorId));
 
     }
