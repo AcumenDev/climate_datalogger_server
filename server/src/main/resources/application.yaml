@@ -13,11 +13,11 @@ server:
 logging:
  file: ./logs/datalogger.log
  level:
-  io.netty.handler: TRACE
+  io.netty.handler: WARN
   org.springframework.web: WARN
   org.springframework.security: WARN
-  org.postgresql.jdbc: DEBUG
-  org.springframework.jdbc: TRACE
+  org.postgresql.jdbc: WARN
+  org.springframework.jdbc: WARN
 
 ---
 

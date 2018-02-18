@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
 import java.util.Map;
 
 @Slf4j
@@ -25,7 +26,7 @@ public class ReadingsController {
                                  @RequestParam("sensor_type") int sensorType,
                                  @RequestParam(value = "from", required = false) Long from,
                                  @RequestParam(value = "to", required = false) Long to) {
-        //log.warn("{} {} {} {} {}", user.getId(),sensorId,sensorType, from, to);
+        log.warn("{} {} {} {} {}", user.getId(), sensorId, sensorType, new Timestamp(from), new Timestamp(to));
 
         SensorService service = sensorsService.get(sensorType);
 

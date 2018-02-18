@@ -6,7 +6,7 @@ $(function () {
     google.charts.load('current', {
         packages: ['corechart', 'line']
     });
-    google.charts.setOnLoadCallback(loadInfo);
+   // google.charts.setOnLoadCallback(loadInfo);
 
 
     function loadInfo() {

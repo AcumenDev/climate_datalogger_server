@@ -4,15 +4,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
-    <script src="/lib/Chart.js/Chart.js"></script>
 
+
+    <link rel="stylesheet" type="text/css" href="/lib/bootstrap-4.0.0-dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="/lib/tempus_datetimePicker5.0.0-alpha.16/css/tempusdominus-bootstrap-4.css">
+    <script src="/lib/fontawesome-free-5.0.6/fontawesome-all.min.js"></script>
+    <script src="/lib/jquery_v3.1.1/jquery.min.js"></script>
+    <script src="/lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
+    <script src="/lib/Chart.js/Chart.js"></script>
     <script src="/lib/handlebars/handlebars.min.js"></script>
+    <script src="/lib/moment_2.20.1/moment-with-locales.js"></script>
+    <script src="/lib/tempus_datetimePicker5.0.0-alpha.16/js/tempusdominus-bootstrap-4.js"></script>
+
 
     <script src="/js/config.js"></script>
     <script src="/js/lk/sensors/detail.js"></script>
@@ -46,28 +50,66 @@
 </nav>
 
 
-<div class="container-fluid">
+<div class="container-fluid mt-3">
     <div class="row">
 
-        <div class="col-1">
-            <span>Датчик</span>
-            <div id="main">
+        <div class="col-2">
+            <div class="row">
+                <div class="col-sm">
+                    <h5 class="text-center">Датчик</h5>
+                    <div id="main">
+                    </div>
+
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm">
+                    <h5 class="text-center">Удаленный контроль</h5>
+                    <div id="sensor-control">
+                    </div>
+
+                </div>
             </div>
 
+
         </div>
 
-        <div class="col-1">
-            <span>Датчики</span>
-            <div id="sensor-control">
+
+        <div class="col-9">
+
+            <div class="row  justify-content-center">
+
+                <div class='col-3'>
+                    <input type="text" class="form-control datetimepicker-input" id="datetimepickerFrom"
+                           data-toggle="datetimepicker" data-target="#datetimepickerFrom"/>
+
+                </div>
+                <div class='col-3'>
+                    <input type="text" class="form-control datetimepicker-input" id="datetimepickerTo"
+                           data-toggle="datetimepicker" data-target="#datetimepickerTo"/>
+
+                </div>
+                <div class="col-1">
+
+                    <a class="btn btn-primary" id="drawChart"  role="button">Показать</a>
+                </div>
             </div>
 
+
+            <div class="row">
+                <div class="col-sm">
+                    <canvas id="chart_div">
+                    </canvas>
+                </div>
+
+            </div>
         </div>
-        <div class="col-10">
-           <!-- <canvas id="myChart" width="400" height="400"></canvas>-->
-            <canvas id="chart_div">
-            </canvas>
-        </div>
+
+        <!-- <canvas id="myChart" width="400" height="400"></canvas>-->
+
     </div>
+</div>
+
 
 </div>
 
@@ -77,48 +119,48 @@
 <script id="sensors-detail" type="text/x-handlebars-template">
 
     <div class="row">
-        <div class="col-sm-1">Id</div>
-        <div class="col-sm-3">{{id}}</div>
+        <div class="col-sm">Id</div>
+        <div class="col-sm">{{id}}</div>
     </div>
 
     <div class="row">
-        <div class="col-sm-1">Название</div>
-        <div class="col-sm-3">{{name}}</div>
+        <div class="col-sm">Название</div>
+        <div class="col-sm">{{name}}</div>
     </div>
 
     <div class="row">
-        <div class="col-sm-1">Тип</div>
-        <div class="col-sm-3">{{type}}</div>
+        <div class="col-sm">Тип</div>
+        <div class="col-sm">{{type}}</div>
     </div>
 
     <div class="row">
-        <div class="col-sm-1">Номер комнаты</div>
-        <div class="col-sm-3">{{num}}</div>
+        <div class="col-sm">Номер комнаты</div>
+        <div class="col-sm">{{num}}</div>
     </div>
 
     <div class="row">
-        <div class="col-sm-1">Статус</div>
-        <div class="col-sm-3">{{state}}</div>
+        <div class="col-sm">Статус</div>
+        <div class="col-sm">{{state}}</div>
     </div>
 
     <div class="row">
-        <div class="col-sm-1">Описание</div>
-        <div class="col-sm-3">{{description}}</div>
+        <div class="col-sm">Описание</div>
+        <div class="col-sm">{{description}}</div>
     </div>
 
     <div class="row">
-        <div class="col-sm-1">Ключ доступа</div>
-        <div class="col-sm-3">{{apiKey}}</div>
+        <div class="col-sm">Ключ доступа</div>
+        <div class="col-sm">{{apiKey}}</div>
     </div>
 
     <div class="row">
-        <div class="col-sm-1">Время создания</div>
-        <div class="col-sm-3">{{prettifyDate createTime}}</div>
+        <div class="col-sm">Время создания</div>
+        <div class="col-sm">{{prettifyDate createTime}}</div>
     </div>
 
     <div class="row">
-        <div class="col-sm-1">Время последний сесии</div>
-        <div class="col-sm-3">{{prettifyDate lastActiveTime}}</div>
+        <div class="col-sm">Время последний сесии</div>
+        <div class="col-sm">{{prettifyDate lastActiveTime}}</div>
     </div>
 
 
