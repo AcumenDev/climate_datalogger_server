@@ -5,6 +5,7 @@ import com.acumendev.climatelogger.api.dto.mapper.SensorDtoMapper;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.service.SensorManagerService;
 import com.acumendev.climatelogger.type.CurrentUser;
+import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

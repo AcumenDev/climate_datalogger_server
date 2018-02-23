@@ -67,8 +67,4 @@ public class CurrentUser implements UserDetails {
         return state;
     }
 
-    @Override
-    public String getName() {
-        return login;
-    }
 }

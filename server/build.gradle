@@ -4,7 +4,7 @@ buildscript {
         maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.M7")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RC2")
     }
 }
 
@@ -25,6 +25,7 @@ dependencies {
     compile group: 'org.projectlombok', name: 'lombok'
     compile("org.springframework.boot:spring-boot-devtools")
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    compile("org.springframework.boot:spring-boot-starter-actuator")
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools'

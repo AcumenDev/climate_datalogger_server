@@ -10,11 +10,17 @@ spring:
 server:
     port: 8080
 
+management.endpoints.web.exposure.include: metrics, info, health
+management.metrics.export.simple.enabled: true
+#management.metrics.enable: true
+management.metrics.enable.example.remote: true
+
+
 logging:
  file: ./logs/datalogger.log
  level:
   io.netty.handler: WARN
-  org.springframework.web: WARN
+  org.springframework.web: INFO
   org.springframework.security: WARN
   org.postgresql.jdbc: WARN
   org.springframework.jdbc: WARN
