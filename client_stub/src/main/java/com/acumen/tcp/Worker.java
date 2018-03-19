@@ -89,7 +89,7 @@ public class Worker extends Thread {
 
     private void work(BaseMessage reciveMsg) {
         TemperatureProtocol.NotifyRequest notifyRequest = TemperatureProtocol.NotifyRequest.newBuilder()
-                .setCurrent(Math.abs(random.nextFloat()) % 20)
+                .setCurrent(Math.abs(random.nextInt(20)))
 
                 .build();
 
