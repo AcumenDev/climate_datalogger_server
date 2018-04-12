@@ -1,4 +1,4 @@
-package com.acumendev.climatelogger.service.sensor;
+package com.acumendev.climatelogger.service.sensors;
 
 import com.acumendev.climatelogger.type.CurrentUser;
 

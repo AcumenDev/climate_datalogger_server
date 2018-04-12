@@ -13,6 +13,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -25,12 +26,14 @@ public class TcpServer extends Thread {
 
     private final Map<String, SensorHandler> sensorHandlers;
     private final AuthHandler authHandler;
+    private final int port;
     private ChannelFuture future;
 
     public TcpServer(Map<String, SensorHandler> sensorHandlers,
-                     AuthHandler authHandler) {
+                     AuthHandler authHandler, @Value("${input.tcp.port:9999}") int port) {
         this.sensorHandlers = sensorHandlers;
         this.authHandler = authHandler;
+        this.port = port;
     }
 
     @PostConstruct
@@ -57,12 +60,13 @@ public class TcpServer extends Thread {
                             );
                         }
                     }).option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
-            future = b.bind(9999).sync();
+            future = b.bind(port).sync();
             future.channel().closeFuture().awaitUninterruptibly().sync();
 
         } catch (Exception e) {
-            log.error("Ошбка сервера tcp", e);
+            log.error("Ошбка запуска  сервера tcp", e);
 
         } finally {
 

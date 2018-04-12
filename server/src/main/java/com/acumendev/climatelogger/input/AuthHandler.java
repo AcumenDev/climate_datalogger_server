@@ -29,7 +29,8 @@ public class AuthHandler {
     public AuthHandler(Map<SensorDescriptor, SensorDbo> sensorsEnadled,
                        Map<Long, SensorHandler> sensorsActiveSession,
                        TemperatureReadingsRepository readingsRepository,
-                       TemperatureSettingRepository settingRepository, SensorRepository sensorRepository) {
+                       TemperatureSettingRepository settingRepository,
+                       SensorRepository sensorRepository) {
         this.sensorsEnadled = sensorsEnadled;
         this.sensorsActiveSession = sensorsActiveSession;
         this.readingsRepository = readingsRepository;

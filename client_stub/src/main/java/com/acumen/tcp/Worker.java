@@ -53,7 +53,7 @@ public class Worker extends Thread {
                     AuthRequest request = AuthRequest.newBuilder()
                             .setType(1)
                             .setVersion(1)
-                            .setApiKey("1234567890")
+                            .setApiKey("53ae8ff6-3d8c-11e8-b467-0ed5f89f718b")
                             .build();
 
                /* connectStore.getCtx().writeAndFlush(AuthRequest.builder()
@@ -79,7 +79,7 @@ public class Worker extends Thread {
 
                 work(reciveMsg);
 
-                sleep(30000);
+                sleep(500);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

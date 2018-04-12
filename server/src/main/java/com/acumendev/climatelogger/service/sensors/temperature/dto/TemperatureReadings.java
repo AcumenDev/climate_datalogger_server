@@ -1,4 +1,4 @@
-package com.acumendev.climatelogger.service.sensor.dto;
+package com.acumendev.climatelogger.service.sensors.temperature.dto;
 
 import lombok.Builder;
 import lombok.Getter;

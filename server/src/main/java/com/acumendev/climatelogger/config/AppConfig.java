@@ -4,7 +4,7 @@ import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.service.SensorDescriptor;
-import com.acumendev.climatelogger.service.sensor.SensorService;
+import com.acumendev.climatelogger.service.sensors.SensorService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,9 +1,10 @@
-package com.acumendev.climatelogger.service.sensor;
+package com.acumendev.climatelogger.service.sensors.temperature;
 
 
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.dto.ReadingDbo;
-import com.acumendev.climatelogger.service.sensor.dto.TemperatureReadings;
+import com.acumendev.climatelogger.service.sensors.SensorService;
+import com.acumendev.climatelogger.service.sensors.temperature.dto.TemperatureReadings;
 import com.acumendev.climatelogger.type.CurrentUser;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

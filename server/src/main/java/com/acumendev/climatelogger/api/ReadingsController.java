@@ -1,7 +1,7 @@
 package com.acumendev.climatelogger.api;
 
 import com.acumendev.climatelogger.api.dto.BaseResponse;
-import com.acumendev.climatelogger.service.sensor.SensorService;
+import com.acumendev.climatelogger.service.sensors.SensorService;
 import com.acumendev.climatelogger.type.CurrentUser;
 import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;

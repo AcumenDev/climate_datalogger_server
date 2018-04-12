@@ -33,12 +33,10 @@ public class UserRepository {
         return jdbcTemplate.query(selectByLoginAndPasswd, sqlParameterSource, this::build);
     }
 
-
     public UserDbo getUserByLogin(String login) {
         return jdbcTemplate.queryForObject(selectByLogin,
                 new MapSqlParameterSource("login", login),
                 (rs, rowNum) -> build(rs)
-
         );
     }
 
