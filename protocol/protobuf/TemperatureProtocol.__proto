@@ -10,6 +10,8 @@ option java_package = "com.acumen.tcp.dto_new";
 //protoc --java_out=./server/src/main/java/ ./client_stub/protobuf/TemperatureProtocol.proto
 
 
+
+////home/vst/soft/nanopb-0.3.9.1-linux-x86/nanopb-0.3.9.1-linux-x86/generator-bin/protoc --nanopb_out=nano/ TemperatureProtocol.proto
 message BaseMessage {
     required PacketType type = 1;
     optional AuthRequest authRequest = 2;

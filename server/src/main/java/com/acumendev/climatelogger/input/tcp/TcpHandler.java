@@ -2,6 +2,7 @@ package com.acumendev.climatelogger.input.tcp;
 
 import com.acumendev.climatelogger.input.AuthHandler;
 import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
+import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 @Slf4j
-public class TcpHandler extends SimpleChannelInboundHandler<TemperatureProtocol.BaseMessage> {
+public class TcpHandler extends SimpleChannelInboundHandler<BaseMessageOuterClass.BaseMessage> {
 
     private final Map<String, SensorHandler> tcpSensorHandlers;
     private final AuthHandler authHandler;
@@ -31,15 +32,15 @@ public class TcpHandler extends SimpleChannelInboundHandler<TemperatureProtocol.
         log.info("Unregistered {} {}", ctx.channel().remoteAddress().toString(), id);
 
         SensorHandler handler = tcpSensorHandlers.get(id);
-
-        handler.disconnect();
-        authHandler.unregistered(handler);
-        tcpSensorHandlers.remove(id);
-
+        if (handler != null) {
+            handler.disconnect();
+            authHandler.unregistered(handler);
+            tcpSensorHandlers.remove(id);
+        }
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TemperatureProtocol.BaseMessage msg) {
+    protected void channelRead0(ChannelHandlerContext ctx, BaseMessageOuterClass.BaseMessage msg) {
         String id = ctx.channel().id().asLongText();
         log.debug("ChannelRead {}\n {}", id, msg.toString());
 
@@ -49,14 +50,14 @@ public class TcpHandler extends SimpleChannelInboundHandler<TemperatureProtocol.
         }
 
 
-        if (msg.hasAuthRequest()) {
-            TemperatureProtocol.AuthRequest authRequest = msg.getAuthRequest();
+        if (msg.hasAuth()) {
+            BaseMessageOuterClass.Auth authRequest = msg.getAuth();
 
             SensorHandler handler = authHandler.auth(ctx.channel(), id, authRequest);
             if (handler != null) {
                 tcpSensorHandlers.put(id, handler);
                 handler.init();
-            }else {
+            } else {
                 ctx.channel().close();
             }
         }

@@ -1,6 +1,7 @@
 package com.acumendev.climatelogger.input.tcp.handlers;
 
-import com.acumendev.climatelogger.input.tcp.TemperatureProtocol;
+import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
+import com.acumendev.climatelogger.protocol.TemperatureOuterClass;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
@@ -11,7 +12,7 @@ import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class TemperatureHandler implements SensorHandler {
+public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.BaseMessage> {
 
 
     private final SensorDbo sensorDbo;
@@ -56,59 +57,41 @@ public class TemperatureHandler implements SensorHandler {
     }
 
     @Override
-    public void procces(TemperatureProtocol.BaseMessage msg) {
-        switch (msg.getType()) {
-            case notifyRequest: {
-                TemperatureProtocol.NotifyRequest request = msg.getNotifyRequest();
-                ReadingDbo dbo = ReadingDbo.builder()
-                        .sensorId(sensorDbo.getId())
-                        .userId(sensorDbo.getUserId())
-                        .timeStamp(System.currentTimeMillis())
-                        .value(request.getCurrent())
-                        .coolingState(request.getCoolingState() == 1)
-                        .heatingState(request.getHeatingState() == 1)
-                        .build();
-                readingsRepository.add(dbo);
-                channel.writeAndFlush(TemperatureProtocol.BaseMessage.newBuilder().setType(TemperatureProtocol.PacketType.notifyResponse).build());
-                updateLastActiveTime();
-                return;
-            }
+    public void procces(BaseMessageOuterClass.BaseMessage msg) {
 
-            case actualConfig: {
-                TempSettingsDbo settingsDbo = TempSettingsDbo.builder()
-                        .sensorId(sensorDbo.getId())
-                        .gisteris(msg.getActualConfig().getGisteris())
-                        .target(msg.getActualConfig().getTarget())
-                        .tuningSensor(msg.getActualConfig().getTuningSensor())
-                        .build();
+        if (!msg.hasTemperature()) {
+            log.error("Не поддерживаемый тип пакета {}", msg);
+            return;
+        }
 
-                settingRepository.update(settingsDbo);
-                updateLastActiveTime();
-                return;
-            }
-            case configChanges: {
-
-/*
-                TemperatureProtocol.ConfigChanges configChanges = msg.getConfigChanges();
+        TemperatureOuterClass.Temperature temperature = msg.getTemperature();
 
 
-                TempSettingsDbo settingsDbo = TempSettingsDbo.builder()
-                        .sensorId(descriptor.getId())
-                        .gisteris(msg.getConfigChanges().getGisteris())
-                        .target(msg.getActualConfig().getTarget())
-                        .tuningSensor(msg.getActualConfig().getTuningSensor())
-                        .build();
+        if (temperature.hasNotify()) {
+            TemperatureOuterClass.Notify request = temperature.getNotify();
+            ReadingDbo dbo = ReadingDbo.builder()
+                    .sensorId(sensorDbo.getId())
+                    .userId(sensorDbo.getUserId())
+                    .timeStamp(System.currentTimeMillis())
+                    .value(request.getCurrent())
+                    .coolingState(request.getCoolingState() == 1)
+                    .heatingState(request.getHeatingState() == 1)
+                    .build();
+            readingsRepository.add(dbo);
+            updateLastActiveTime();
+        } else if (temperature.hasConfig()) {
+            TemperatureOuterClass.Config config = temperature.getConfig();
+            TempSettingsDbo settingsDbo = TempSettingsDbo.builder()
+                    .sensorId(sensorDbo.getId())
+                    .gisteris(config.getGisteris())
+                    .target(config.getTarget())
+                    .tuningSensor(config.getTuningSensor())
+                    .build();
 
-                settingRepository.update(settingsDbo);*/
-
-                updateLastActiveTime();
-                return;
-            }
-            default: {
-                log.error("Не поддерживаемый тип пакета {}", msg);
-            }
+            settingRepository.update(settingsDbo);
+            updateLastActiveTime();
+        } else {
+            log.error("Не поддерживаемый тип пакета {}", msg);
         }
     }
-
-
 }

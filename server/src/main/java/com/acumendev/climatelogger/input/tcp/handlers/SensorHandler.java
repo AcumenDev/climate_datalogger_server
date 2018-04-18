@@ -1,15 +1,13 @@
 package com.acumendev.climatelogger.input.tcp.handlers;
 
 
-import com.acumendev.climatelogger.input.tcp.TemperatureProtocol;
-
-public interface SensorHandler {
+public interface SensorHandler<T> {
 
     long getSensorId();
 
     void disconnect();
 
-    void procces(TemperatureProtocol.BaseMessage msg);
+    void procces(T msg);
 
     void init();
 }

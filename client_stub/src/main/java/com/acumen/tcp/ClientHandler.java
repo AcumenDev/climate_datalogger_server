@@ -1,10 +1,10 @@
 package com.acumen.tcp;
 
-import com.acumen.tcp.dto_new.TemperatureProtocol;
+import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class ClientHandler extends SimpleChannelInboundHandler<TemperatureProtocol.BaseMessage> {
+public class ClientHandler extends SimpleChannelInboundHandler<BaseMessageOuterClass.BaseMessage> {
 
     private final ConnectStore connectStore;
 
@@ -29,7 +29,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<TemperatureProtoc
 
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TemperatureProtocol.BaseMessage msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, BaseMessageOuterClass.BaseMessage msg) {
         System.out.println("channelRead0  \n" + msg.toString());
         // ctx.writeAndFlush(ResponseData.builder().val("1234567890").build());
         connectStore.queue.add(msg);

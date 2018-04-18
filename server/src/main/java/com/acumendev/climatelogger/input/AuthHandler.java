@@ -1,14 +1,13 @@
 package com.acumendev.climatelogger.input;
 
-
-import com.acumendev.climatelogger.input.tcp.TemperatureProtocol;
+import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
+import com.acumendev.climatelogger.input.tcp.handlers.TemperatureHandler;
+import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureSettingRepository;
 import com.acumendev.climatelogger.service.SensorDescriptor;
-import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
-import com.acumendev.climatelogger.input.tcp.handlers.TemperatureHandler;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -38,7 +37,7 @@ public class AuthHandler {
         this.sensorRepository = sensorRepository;
     }
 
-    public SensorHandler auth(Channel channel, String channelId, TemperatureProtocol.AuthRequest authRequest) {
+    public SensorHandler auth(Channel channel, String channelId, BaseMessageOuterClass.Auth authRequest) {
         SensorDescriptor sensorDescriptor = SensorDescriptor.builder()
                 .apiKey(authRequest.getApiKey())
                 .type(authRequest.getType())
@@ -48,7 +47,7 @@ public class AuthHandler {
         if (sensorDbo != null) {
             log.info("Авторизованн channelId {}  {}", channelId, authRequest);
 
-            channel.writeAndFlush(TemperatureProtocol.BaseMessage.newBuilder().setType(TemperatureProtocol.PacketType.authResponse).setAuthResponse(TemperatureProtocol.AuthResponse.newBuilder().setState(0).build()).build());
+            channel.writeAndFlush(BaseMessageOuterClass.BaseMessage.newBuilder().setAuth(BaseMessageOuterClass.Auth.newBuilder().setState(0).build()).build());
             SensorHandler handler = buildHandler(sensorDbo, channel);
 
             if (handler != null) {
@@ -72,6 +71,7 @@ public class AuthHandler {
         }
         return null;
     }
+
     public void unregistered(SensorHandler handler) {
         sensorsActiveSession.remove(handler.getSensorId());
     }

@@ -19,7 +19,7 @@ management.metrics.enable.example.remote: true
 logging:
  file: ./logs/datalogger.log
  level:
-  io.netty.handler: WARN
+  io.netty.handler: TRACE
   org.springframework.web: INFO
   org.springframework.security: WARN
   org.postgresql.jdbc: WARN

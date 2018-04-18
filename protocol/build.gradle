@@ -1,0 +1,13 @@
+apply plugin: 'java'
+
+group = 'com.acumen'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.5.1'
+}

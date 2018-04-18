@@ -1,9 +1,8 @@
 package com.acumen.tcp;
 
-import com.acumen.tcp.dto_new.TemperatureProtocol;
-import com.acumen.tcp.dto_new.TemperatureProtocol.AuthRequest;
-import com.acumen.tcp.dto_new.TemperatureProtocol.BaseMessage;
-import com.acumen.tcp.dto_new.TemperatureProtocol.PacketType;
+
+import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
+import com.acumendev.climatelogger.protocol.TemperatureOuterClass;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -36,12 +35,12 @@ public class Worker extends Thread {
         while (state) {
             try {
 
-                BaseMessage reciveMsg = connectStore.queue.poll(1, TimeUnit.SECONDS);
+                BaseMessageOuterClass.BaseMessage reciveMsg = connectStore.queue.poll(1, TimeUnit.SECONDS);
 
                 if (reciveMsg != null) {
 
-                    if (reciveMsg.getType() == PacketType.authResponse) {
-                        if (reciveMsg.getAuthResponse().getState() == 0) {
+                    if (reciveMsg.hasAuth()) {
+                        if (reciveMsg.getAuth().getState() == 0) {
                             auth = true;
                         }
                     }
@@ -50,10 +49,10 @@ public class Worker extends Thread {
 
                 if (!auth) {
 
-                    AuthRequest request = AuthRequest.newBuilder()
+                    BaseMessageOuterClass.Auth request = BaseMessageOuterClass.Auth.newBuilder()
                             .setType(1)
                             .setVersion(1)
-                            .setApiKey("53ae8ff6-3d8c-11e8-b467-0ed5f89f718b")
+                            .setApiKey("b5d52c0b-9f15-42ac-a2f8-650aca23c682")
                             .build();
 
                /* connectStore.getCtx().writeAndFlush(AuthRequest.builder()
@@ -62,9 +61,8 @@ public class Worker extends Thread {
                         .type((short) 1)
                         .version((short) 1)
                         .build());*/
-                    BaseMessage baseMessage = BaseMessage.newBuilder()
-                            .setType(PacketType.authRequest)
-                            .setAuthRequest(request)
+                    BaseMessageOuterClass.BaseMessage baseMessage = BaseMessageOuterClass.BaseMessage.newBuilder()
+                            .setAuth(request)
                             .build();
 
 
@@ -87,15 +85,16 @@ public class Worker extends Thread {
         }
     }
 
-    private void work(BaseMessage reciveMsg) {
-        TemperatureProtocol.NotifyRequest notifyRequest = TemperatureProtocol.NotifyRequest.newBuilder()
+    private void work(BaseMessageOuterClass.BaseMessage reciveMsg) {
+        TemperatureOuterClass.Notify notify = TemperatureOuterClass.Notify.newBuilder()
                 .setCurrent(Math.abs(random.nextInt(20)))
 
                 .build();
 
-        BaseMessage baseMessage = BaseMessage.newBuilder()
-                .setType(PacketType.notifyRequest)
-                .setNotifyRequest(notifyRequest)
+        TemperatureOuterClass.Temperature temperature = TemperatureOuterClass.Temperature.newBuilder().setNotify(notify).build();
+
+        BaseMessageOuterClass.BaseMessage baseMessage = BaseMessageOuterClass.BaseMessage.newBuilder()
+                .setTemperature(temperature)
                 .build();
 
         connectStore.getCtx().channel().writeAndFlush(baseMessage);

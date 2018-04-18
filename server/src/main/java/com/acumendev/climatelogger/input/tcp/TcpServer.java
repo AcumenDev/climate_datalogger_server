@@ -2,6 +2,7 @@ package com.acumendev.climatelogger.input.tcp;
 
 import com.acumendev.climatelogger.input.AuthHandler;
 import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
+import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -12,6 +13,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -53,8 +56,8 @@ public class TcpServer extends Thread {
                         @Override
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast(
-                                    //new LoggingHandler(LogLevel.TRACE),
-                                    new ProtobufDecoder(TemperatureProtocol.BaseMessage.getDefaultInstance()),
+                                    new LoggingHandler(LogLevel.TRACE),
+                                    new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()),
                                     new TcpHandler(sensorHandlers, authHandler),
                                     new ProtobufEncoder()
                             );

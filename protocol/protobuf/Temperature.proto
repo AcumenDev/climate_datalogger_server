@@ -1,0 +1,18 @@
+syntax = "proto2";
+option java_package = "com.acumendev.climatelogger.protocol";
+message Temperature {
+    optional Notify notify = 1;
+    optional Config config = 2;
+}
+
+message Notify {
+    optional float current = 1;
+    optional uint32 heatingState = 2;
+    optional uint32 coolingState = 3;
+}
+
+message Config {
+    optional float target = 1;
+    optional float gisteris = 2;
+    optional float tuningSensor = 3;
+}

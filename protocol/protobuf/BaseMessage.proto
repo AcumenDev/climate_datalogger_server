@@ -1,0 +1,15 @@
+syntax = "proto2";
+option java_package = "com.acumendev.climatelogger.protocol";
+import "Temperature.proto";
+
+message BaseMessage {
+    optional Auth auth = 1;
+    optional Temperature temperature = 2;  
+}
+
+message Auth {
+    optional int32 type = 1;
+    optional int32 version = 2;
+    optional string apiKey = 3;
+    optional int32 state = 4;
+}

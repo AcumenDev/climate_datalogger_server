@@ -1,6 +1,7 @@
 package com.acumen.tcp;
 
-import com.acumen.tcp.dto_new.TemperatureProtocol;
+
+import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -46,7 +47,7 @@ public class Client extends Thread {
                             ch.pipeline().addLast(
                                     new LoggingHandler(),
                                     // new ProtobufVarint32FrameDecoder(),
-                                    new ProtobufDecoder(TemperatureProtocol.BaseMessage.getDefaultInstance()),
+                                    new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()),
                                     new ClientHandler(connectStore),
                                     //new ProtobufVarint32LengthFieldPrepender(),
                                     new ProtobufEncoder()
