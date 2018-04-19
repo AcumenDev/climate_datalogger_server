@@ -11,6 +11,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.springframework.stereotype.Service;
 
@@ -44,14 +47,14 @@ public class Client extends Thread {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) {
-                            ch.pipeline().addLast(
-                                    new LoggingHandler(),
-                                    // new ProtobufVarint32FrameDecoder(),
-                                    new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()),
-                                    new ClientHandler(connectStore),
-                                    //new ProtobufVarint32LengthFieldPrepender(),
-                                    new ProtobufEncoder()
-                            );
+                            ch.pipeline()
+                                    .addFirst("log", new LoggingHandler(LogLevel.TRACE))
+                                    .addAfter("log", "FrameDecoder", new ProtobufVarint32FrameDecoder())
+                                    .addAfter("FrameDecoder", "ProtobufDecoder", new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()))
+                                    .addAfter("ProtobufDecoder", "ClientHandler", new ClientHandler(connectStore))
+
+                                    .addAfter("ClientHandler", "FrameEncoder", new ProtobufVarint32LengthFieldPrepender())
+                                    .addAfter("FrameEncoder", "ProtobufEncoder", new ProtobufEncoder());
                         }
                     });
 

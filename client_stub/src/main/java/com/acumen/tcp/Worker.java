@@ -52,7 +52,7 @@ public class Worker extends Thread {
                     BaseMessageOuterClass.Auth request = BaseMessageOuterClass.Auth.newBuilder()
                             .setType(1)
                             .setVersion(1)
-                            .setApiKey("b5d52c0b-9f15-42ac-a2f8-650aca23c682")
+                            .setApiKey("53ae8ff6-3d8c-11e8-b467-0ed5f89f718b")
                             .build();
 
                /* connectStore.getCtx().writeAndFlush(AuthRequest.builder()

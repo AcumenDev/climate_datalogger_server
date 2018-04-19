@@ -61,6 +61,7 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
 
         if (!msg.hasTemperature()) {
             log.error("Не поддерживаемый тип пакета {}", msg);
+            channel.close();
             return;
         }
 
@@ -92,6 +93,7 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
             updateLastActiveTime();
         } else {
             log.error("Не поддерживаемый тип пакета {}", msg);
+
         }
     }
 }
