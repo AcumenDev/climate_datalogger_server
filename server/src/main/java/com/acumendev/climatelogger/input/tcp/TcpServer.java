@@ -13,8 +13,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -59,11 +57,11 @@ public class TcpServer extends Thread {
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline()
                                     .addFirst("log", new LoggingHandler(LogLevel.TRACE))
-                                    .addAfter("log", "FrameDecoder", new ProtobufVarint32FrameDecoder())
-                                    .addAfter("FrameDecoder", "ProtobufDecoder", new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()))
-                                    .addAfter("ProtobufDecoder", "ClientHandler", new TcpHandler(sensorHandlers, authHandler))
-                                    .addAfter("ClientHandler", "FrameEncoder", new ProtobufVarint32LengthFieldPrepender())
-                                    .addAfter("FrameEncoder", "ProtobufEncoder", new ProtobufEncoder());
+                                    //  .addAfter("log", "FrameDecoder", new ProtobufVarint32FrameDecoder())
+                                    .addLast(new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()))
+                                    .addLast(new TcpHandler(sensorHandlers, authHandler))
+                                    //  .addAfter("ClientHandler", "FrameEncoder", new ProtobufVarint32LengthFieldPrepender())
+                                    .addLast(new ProtobufEncoder());
 
                         }
                     }).option(ChannelOption.SO_BACKLOG, 128)
