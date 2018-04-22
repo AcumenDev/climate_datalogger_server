@@ -49,12 +49,12 @@ public class Client extends Thread {
                         public void initChannel(SocketChannel ch) {
                             ch.pipeline()
                                     .addFirst("log", new LoggingHandler(LogLevel.TRACE))
-                                    .addAfter("log", "FrameDecoder", new ProtobufVarint32FrameDecoder())
-                                    .addAfter("FrameDecoder", "ProtobufDecoder", new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()))
-                                    .addAfter("ProtobufDecoder", "ClientHandler", new ClientHandler(connectStore))
+                                 //   .addAfter("log", "FrameDecoder", new ProtobufVarint32FrameDecoder())
+                                    .addLast(new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()))
+                                    .addLast( new ClientHandler(connectStore))
 
-                                    .addAfter("ClientHandler", "FrameEncoder", new ProtobufVarint32LengthFieldPrepender())
-                                    .addAfter("FrameEncoder", "ProtobufEncoder", new ProtobufEncoder());
+                               //     .addAfter("ClientHandler", "FrameEncoder", new ProtobufVarint32LengthFieldPrepender())
+                                    .addLast( new ProtobufEncoder());
                         }
                     });
 

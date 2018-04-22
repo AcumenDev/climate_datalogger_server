@@ -75,8 +75,6 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
                     .userId(sensorDbo.getUserId())
                     .timeStamp(System.currentTimeMillis())
                     .value(request.getCurrent())
-                    .coolingState(request.getCoolingState() == 1)
-                    .heatingState(request.getHeatingState() == 1)
                     .build();
             readingsRepository.add(dbo);
             updateLastActiveTime();

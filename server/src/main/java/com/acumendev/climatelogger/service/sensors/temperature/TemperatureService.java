@@ -33,8 +33,6 @@ public class TemperatureService implements SensorService<List<TemperatureReading
         return readingDbos.stream().map(readingDbo ->
                 TemperatureReadings.builder()
                         .value(readingDbo.getValue())
-                        .coolingState(readingDbo.isCoolingState())
-                        .heatingState(readingDbo.isHeatingState())
                         .dateTime(readingDbo.getTimeStamp())
                         .build()
 
@@ -48,8 +46,6 @@ public class TemperatureService implements SensorService<List<TemperatureReading
         return readingDbos.stream().map(readingDbo ->
                 TemperatureReadings.builder()
                         .value(readingDbo.getValue())
-                       // .coolingState(readingDbo.isCoolingState())
-                        //.heatingState(readingDbo.isHeatingState())
                         .dateTime(readingDbo.getTimeStamp())
                         .build()
 

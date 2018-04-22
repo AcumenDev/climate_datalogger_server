@@ -37,7 +37,7 @@ public class AuthHandler {
         this.sensorRepository = sensorRepository;
     }
 
-    public SensorHandler auth(Channel channel, String channelId, BaseMessageOuterClass.Auth authRequest) {
+    public SensorHandler<BaseMessageOuterClass.BaseMessage> auth(Channel channel, String channelId, BaseMessageOuterClass.Auth authRequest) {
         SensorDescriptor sensorDescriptor = SensorDescriptor.builder()
                 .apiKey(authRequest.getApiKey())
                 .type(authRequest.getType())
@@ -48,7 +48,7 @@ public class AuthHandler {
             log.info("Авторизованн channelId {}  {}", channelId, authRequest);
 
             channel.writeAndFlush(BaseMessageOuterClass.BaseMessage.newBuilder().setAuth(BaseMessageOuterClass.Auth.newBuilder().setState(0).build()).build());
-            SensorHandler handler = buildHandler(sensorDbo, channel);
+            SensorHandler<BaseMessageOuterClass.BaseMessage> handler = buildHandler(sensorDbo, channel);
 
             if (handler != null) {
                 sensorsActiveSession.put(sensorDbo.getId(), handler);
@@ -59,7 +59,7 @@ public class AuthHandler {
         return null;
     }
 
-    private SensorHandler buildHandler(SensorDbo sensorDbo, Channel channel) {
+    private SensorHandler<BaseMessageOuterClass.BaseMessage> buildHandler(SensorDbo sensorDbo, Channel channel) {
 
         switch (sensorDbo.getType()) {
             case 1: {

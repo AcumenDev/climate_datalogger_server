@@ -12,10 +12,10 @@ import java.util.Map;
 @Slf4j
 public class TcpHandler extends SimpleChannelInboundHandler<BaseMessageOuterClass.BaseMessage> {
 
-    private final Map<String, SensorHandler> tcpSensorHandlers;
+    private final Map<String, SensorHandler<BaseMessageOuterClass.BaseMessage>> tcpSensorHandlers;
     private final AuthHandler authHandler;
 
-    TcpHandler(Map<String, SensorHandler> tcpSensorHandlers, AuthHandler authHandler) {
+    TcpHandler(Map<String, SensorHandler<BaseMessageOuterClass.BaseMessage>> tcpSensorHandlers, AuthHandler authHandler) {
         this.tcpSensorHandlers = tcpSensorHandlers;
         this.authHandler = authHandler;
     }
@@ -53,7 +53,7 @@ public class TcpHandler extends SimpleChannelInboundHandler<BaseMessageOuterClas
         if (msg.hasAuth()) {
             BaseMessageOuterClass.Auth authRequest = msg.getAuth();
 
-            SensorHandler handler = authHandler.auth(ctx.channel(), id, authRequest);
+            SensorHandler<BaseMessageOuterClass.BaseMessage> handler = authHandler.auth(ctx.channel(), id, authRequest);
             if (handler != null) {
                 tcpSensorHandlers.put(id, handler);
                 handler.init();

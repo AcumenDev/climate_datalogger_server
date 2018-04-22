@@ -27,12 +27,12 @@ import java.util.Map;
 @Component
 public class TcpServer extends Thread {
 
-    private final Map<String, SensorHandler> sensorHandlers;
+    private final Map<String, SensorHandler<BaseMessageOuterClass.BaseMessage>> sensorHandlers;
     private final AuthHandler authHandler;
     private final int port;
     private ChannelFuture future;
 
-    public TcpServer(Map<String, SensorHandler> sensorHandlers,
+    public TcpServer(Map<String, SensorHandler<BaseMessageOuterClass.BaseMessage>> sensorHandlers,
                      AuthHandler authHandler, @Value("${input.tcp.port:9999}") int port) {
         this.sensorHandlers = sensorHandlers;
         this.authHandler = authHandler;

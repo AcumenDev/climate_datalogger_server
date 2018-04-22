@@ -45,8 +45,6 @@ CREATE TABLE public.sensor_temperature_readings
   user_id       BIGINT REFERENCES public.user (id)                               NOT NULL,
   sensor_id     BIGINT REFERENCES public.sensor (id)                             NOT NULL,
   value         REAL                                                      NOT NULL,
-  heating_state BOOLEAN                                                   NOT NULL,
-  cooling_state BOOLEAN                                                   NOT NULL,
   date_time     TIMESTAMP WITHOUT TIME ZONE                               NOT NULL
 );
 ALTER TABLE public.sensor_temperature_readings

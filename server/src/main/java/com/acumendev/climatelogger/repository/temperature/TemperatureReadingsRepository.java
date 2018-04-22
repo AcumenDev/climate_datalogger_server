@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public class TemperatureReadingsRepository {
     private final String insertReadings =
-            "INSERT INTO sensor_temperature_readings (user_id, sensor_id,  value, cooling_state, heating_state,  date_time) VALUES (:user_id, :sensor_id, :value, :cooling_state, :heating_state, :date_time);";
+            "INSERT INTO sensor_temperature_readings (user_id, sensor_id,  value,  date_time) VALUES (:user_id, :sensor_id, :value, :date_time);";
 
 
 
@@ -62,8 +62,6 @@ ORDER BY time;
                 .addValue("user_id", dbo.getUserId())
                 .addValue("sensor_id", dbo.getSensorId())
                 .addValue("value", dbo.getValue())
-                .addValue("cooling_state", dbo.isCoolingState())
-                .addValue("heating_state", dbo.isHeatingState())
                 .addValue("date_time", new Timestamp(dbo.getTimeStamp()));
         jdbcTemplate.update(insertReadings, parameterSource);
     }
@@ -74,8 +72,6 @@ ORDER BY time;
                 .userId(rs.getLong("user_id"))
                 .sensorId(rs.getInt("sensor_id"))
                 .value(rs.getFloat("value"))
-                .heatingState(rs.getBoolean("heating_state"))
-                .coolingState(rs.getBoolean("cooling_state"))
                 .timeStamp(rs.getTimestamp("date_time").getTime())
                 .build();
 
