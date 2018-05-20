@@ -19,7 +19,7 @@ public class AppConfig {
 
     /////Сенсоры включенные пользователями
     @Bean
-    Map<SensorDescriptor, SensorDbo> sensorsEnadled(SensorRepository repository) {
+    Map<SensorDescriptor, SensorDbo> sensorsEnabled(SensorRepository repository) {
         List<SensorDbo> sensorList = repository.getEnabled();
 
         Map<SensorDescriptor, SensorDbo> sensorDbos = new ConcurrentHashMap<>();

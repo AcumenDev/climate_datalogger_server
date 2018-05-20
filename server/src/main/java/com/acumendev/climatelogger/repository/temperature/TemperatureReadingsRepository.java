@@ -66,6 +66,22 @@ ORDER BY time;
         jdbcTemplate.update(insertReadings, parameterSource);
     }
 
+    public void addBatch(List<ReadingDbo> readingsDbos) {
+
+        MapSqlParameterSource[] mapSqlParameterSource = new MapSqlParameterSource[readingsDbos.size()];
+
+        for (int i = 0; i < readingsDbos.size(); i++) {
+            ReadingDbo dbo = readingsDbos.get(i);
+            mapSqlParameterSource[i] = new MapSqlParameterSource()
+                    .addValue("user_id", dbo.getUserId())
+                    .addValue("sensor_id", dbo.getSensorId())
+                    .addValue("value", dbo.getValue())
+                    .addValue("date_time", new Timestamp(dbo.getTimeStamp()));
+        }
+
+        jdbcTemplate.batchUpdate(insertReadings, mapSqlParameterSource);
+    }
+
     private ReadingDbo build(@NonNull ResultSet rs) throws SQLException {
 
         return ReadingDbo.builder()
@@ -90,10 +106,10 @@ ORDER BY time;
                         .addValue("from", new Timestamp(from))
                         .addValue("user_id", userId)
                         .addValue("sensor_id", sensorId),
-                (rs, rowNum) -> buildAgregation(rs));
+                (rs, rowNum) -> buildAggregation(rs));
     }
 
-    private ReadingDbo buildAgregation(@NonNull ResultSet rs) throws SQLException {
+    private ReadingDbo buildAggregation(@NonNull ResultSet rs) throws SQLException {
 
         return ReadingDbo.builder()
                 .value(rs.getFloat("value"))

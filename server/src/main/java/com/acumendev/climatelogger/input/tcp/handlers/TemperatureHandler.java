@@ -2,6 +2,7 @@ package com.acumendev.climatelogger.input.tcp.handlers;
 
 import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
 import com.acumendev.climatelogger.protocol.TemperatureOuterClass;
+import com.acumendev.climatelogger.repository.NotifyQueueRepository;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
@@ -16,21 +17,21 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
 
 
     private final SensorDbo sensorDbo;
-    private final TemperatureReadingsRepository readingsRepository;
     private final TemperatureSettingRepository settingRepository;
+    private final NotifyQueueRepository notifyQueueRepository;
     private final SensorRepository sensorRepository;
     private final Channel channel;
 
     public TemperatureHandler(SensorDbo sensorDbo,
                               Channel channel,
-                              TemperatureReadingsRepository readingsRepository,
                               TemperatureSettingRepository settingRepository,
+                              NotifyQueueRepository notifyQueueRepository,
                               SensorRepository sensorRepository) {
 
         this.sensorDbo = sensorDbo;
         this.channel = channel;
-        this.readingsRepository = readingsRepository;
         this.settingRepository = settingRepository;
+        this.notifyQueueRepository = notifyQueueRepository;
 
         this.sensorRepository = sensorRepository;
     }
@@ -76,7 +77,9 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
                     .timeStamp(System.currentTimeMillis())
                     .value(request.getCurrent())
                     .build();
-            readingsRepository.add(dbo);
+
+            notifyQueueRepository.add(dbo);
+
             updateLastActiveTime();
         } else if (temperature.hasConfig()) {
             TemperatureOuterClass.Config config = temperature.getConfig();
@@ -91,7 +94,6 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
             updateLastActiveTime();
         } else {
             log.error("Не поддерживаемый тип пакета {}", msg);
-
         }
     }
 }
