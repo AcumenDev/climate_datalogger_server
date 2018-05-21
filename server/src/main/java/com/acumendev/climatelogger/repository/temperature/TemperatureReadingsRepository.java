@@ -13,11 +13,9 @@ import java.util.List;
 
 @Repository
 public class TemperatureReadingsRepository {
+
     private final String insertReadings =
             "INSERT INTO sensor_temperature_readings (user_id, sensor_id,  value,  date_time) VALUES (:user_id, :sensor_id, :value, :date_time);";
-
-
-
 
 /*
 SELECT
@@ -34,8 +32,6 @@ FROM sensor_temperature_readings
   WHERE date_time   BETWEEN '2018-02-03 21:20:00.000000'  AND '2018-02-05 22:50:00.000000'
 GROUP BY time
 ORDER BY time;
-
-
     */
 
     private final String selectSmartReadings = "" +
@@ -55,7 +51,6 @@ ORDER BY time;
     public TemperatureReadingsRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
 
     public void add(ReadingDbo dbo) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
@@ -93,7 +88,6 @@ ORDER BY time;
 
     }
 
-
     public List<ReadingDbo> findByIdAndUserIdInInterval(long sensorId, long userId, int size, long from, long to) {
 
         long bucketSize = (to - from) / 1000 / size;
@@ -124,7 +118,5 @@ ORDER BY time;
                         .addValue("sensor_id", sensorId)
                         .addValue("user_id", userId),
                 (rs, rowNum) -> build(rs));
-
     }
-
 }

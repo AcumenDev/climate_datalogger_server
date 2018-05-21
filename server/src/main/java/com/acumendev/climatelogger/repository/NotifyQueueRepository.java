@@ -14,13 +14,14 @@ import java.util.concurrent.BlockingQueue;
 @Repository
 @RequiredArgsConstructor
 public class NotifyQueueRepository {
+
     private final BlockingQueue<ReadingDbo> notifyQueue;
 
     public void add(ReadingDbo dbo) {
         try {
             notifyQueue.add(dbo);
         } catch (Exception e) {
-            log.error("Ошибка вставки {} в очередь запросов: {}", JsonUtils.dump(dbo), e);
+            log.error("Ошибка вставки {} в очередь запросов к БД: {}", JsonUtils.dump(dbo), e);
         }
     }
 
@@ -29,12 +30,16 @@ public class NotifyQueueRepository {
         try {
             notifyQueue.drainTo(readings, batchSize);
         } catch (Exception e) {
-            log.error("Ошибка чтения пачки, {} запсией, из очереди запросов: {}", batchSize, e);
+            log.error("Ошибка чтения пачки, {} записей, из очереди запросов к БД: {}", batchSize, e);
         }
         return readings;
     }
 
     public long size() {
         return notifyQueue.size();
+    }
+
+    public boolean isQueueEmpty() {
+        return size() == 0;
     }
 }

@@ -3,17 +3,16 @@ package com.acumendev.climatelogger.worker;
 import com.acumendev.climatelogger.repository.NotifyQueueRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.dto.ReadingDbo;
+import com.acumendev.climatelogger.utils.ThreadTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Slf4j
-@Service
-public class DbWriter extends Thread {
+@Component
+public class DbWriter extends ThreadTemplate {
 
     private final NotifyQueueRepository notifyQueueRepository;
     private final TemperatureReadingsRepository readingsRepository;
@@ -35,33 +34,26 @@ public class DbWriter extends Thread {
         this.lastWrite = System.currentTimeMillis();
     }
 
-    @PostConstruct
-    public void init() {
-        start();
+    @Override
+    protected void work() {
+
+        long nextWriteTime = lastWrite + flushTimeout;
+        long queueSize = notifyQueueRepository.size();
+
+        if (System.currentTimeMillis() < nextWriteTime && queueSize < batchSize || notifyQueueRepository.isQueueEmpty()) {
+            log.debug("Условие записи не наступило");
+            safeSleep(idleTimeout);
+            return;
+        }
+
+        List<ReadingDbo> readingDbos = notifyQueueRepository.getBatch(batchSize);
+        readingsRepository.addBatch(readingDbos);
+        lastWrite = System.currentTimeMillis();
+        log.debug("Записано в БД {} записей, в очереди {}", readingDbos.size(), queueSize);
+        safeSleep(idleTimeout);
     }
 
     @Override
-    public void run() {
-        while (true) {
-            if (System.currentTimeMillis() < (lastWrite + flushTimeout) && notifyQueueRepository.size() < batchSize) {
-                log.debug("Время записи не наступило");
-                safeSleep(idleTimeout);
-                continue;
-            }
-
-            List<ReadingDbo> readingDbos = notifyQueueRepository.getBatch(batchSize);
-            readingsRepository.addBatch(readingDbos);
-            lastWrite = System.currentTimeMillis();
-            log.debug("Записано в БД {} записей", readingDbos.size());
-            safeSleep(idleTimeout);
-        }
-    }
-
-    private void safeSleep(final long timeout) {
-        try {
-            Thread.sleep(timeout);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    protected void after() {
     }
 }
