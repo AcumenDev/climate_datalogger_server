@@ -49,13 +49,13 @@ public class TcpServer extends Thread {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
+            ServerBootstrap serverBootstrap = new ServerBootstrap();
+            serverBootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        public void initChannel(SocketChannel ch) {
-                            ch.pipeline()
+                        public void initChannel(SocketChannel socketChannel) {
+                            socketChannel.pipeline()
                                     .addFirst("log", new LoggingHandler(LogLevel.TRACE))
                                     //  .addAfter("log", "FrameDecoder", new ProtobufVarint32FrameDecoder())
                                     .addLast(new ProtobufDecoder(BaseMessageOuterClass.BaseMessage.getDefaultInstance()))
@@ -67,14 +67,13 @@ public class TcpServer extends Thread {
                     }).option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.TCP_NODELAY, true)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
-            future = b.bind(port).sync();
+            future = serverBootstrap.bind(port).sync();
             future.channel().closeFuture().awaitUninterruptibly().sync();
 
         } catch (Exception e) {
             log.error("Ошбка запуска  сервера tcp", e);
 
         } finally {
-
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }

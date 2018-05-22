@@ -14,12 +14,12 @@ import java.util.UUID;
 @Service
 public class SensorManagerService {
     private final SensorRepository sensorRepository;
-    private final Map<SensorDescriptor, SensorDbo> sensorsEnadled;
+    private final Map<SensorDescriptor, SensorDbo> sensorsEnabled;
 
     public SensorManagerService(SensorRepository sensorRepository,
-                                Map<SensorDescriptor, SensorDbo> sensorsEnadled) {
+                                Map<SensorDescriptor, SensorDbo> sensorsEnabled) {
         this.sensorRepository = sensorRepository;
-        this.sensorsEnadled = sensorsEnadled;
+        this.sensorsEnabled = sensorsEnabled;
     }
 
     public void create(CurrentUser user, SensorCreateDto dto) {
@@ -41,7 +41,7 @@ public class SensorManagerService {
                     .apiKey(dbo.getApiKey())
                     .type(dbo.getType())
                     .build();
-            sensorsEnadled.put(descriptor, dbo);
+            sensorsEnabled.put(descriptor, dbo);
         }
     }
 }

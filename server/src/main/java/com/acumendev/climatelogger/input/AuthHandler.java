@@ -3,6 +3,7 @@ package com.acumendev.climatelogger.input;
 import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
 import com.acumendev.climatelogger.input.tcp.handlers.TemperatureHandler;
 import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
+import com.acumendev.climatelogger.repository.NotifyQueueRepository;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
@@ -17,23 +18,23 @@ import java.util.Map;
 @Slf4j
 @Component
 public class AuthHandler {
-    private final Map<SensorDescriptor, SensorDbo> sensorsEnadled;
+    private final Map<SensorDescriptor, SensorDbo> sensorsEnabled;
 
     private final Map<Long, SensorHandler> sensorsActiveSession;
 
-    private final TemperatureReadingsRepository readingsRepository;
     private final TemperatureSettingRepository settingRepository;
+    private final NotifyQueueRepository notifyQueueRepository;
     private final SensorRepository sensorRepository;
 
-    public AuthHandler(Map<SensorDescriptor, SensorDbo> sensorsEnadled,
+    public AuthHandler(Map<SensorDescriptor, SensorDbo> sensorsEnabled,
                        Map<Long, SensorHandler> sensorsActiveSession,
-                       TemperatureReadingsRepository readingsRepository,
                        TemperatureSettingRepository settingRepository,
+                       NotifyQueueRepository notifyQueueRepository,
                        SensorRepository sensorRepository) {
-        this.sensorsEnadled = sensorsEnadled;
+        this.sensorsEnabled = sensorsEnabled;
         this.sensorsActiveSession = sensorsActiveSession;
-        this.readingsRepository = readingsRepository;
         this.settingRepository = settingRepository;
+        this.notifyQueueRepository = notifyQueueRepository;
         this.sensorRepository = sensorRepository;
     }
 
@@ -42,7 +43,7 @@ public class AuthHandler {
                 .apiKey(authRequest.getApiKey())
                 .type(authRequest.getType())
                 .build();
-        SensorDbo sensorDbo = sensorsEnadled.get(sensorDescriptor);
+        SensorDbo sensorDbo = sensorsEnabled.get(sensorDescriptor);
 
         if (sensorDbo != null) {
             log.info("Авторизованн channelId {}  {}", channelId, authRequest);
@@ -63,7 +64,7 @@ public class AuthHandler {
 
         switch (sensorDbo.getType()) {
             case 1: {
-                return new TemperatureHandler(sensorDbo, channel, readingsRepository, settingRepository, sensorRepository);
+                return new TemperatureHandler(sensorDbo, channel, settingRepository, notifyQueueRepository, sensorRepository);
             }
             default: {
                 log.error("Не смогли создать обработчик датчика {}", sensorDbo);

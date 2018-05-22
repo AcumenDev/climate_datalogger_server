@@ -13,11 +13,9 @@ import java.util.List;
 
 @Repository
 public class TemperatureReadingsRepository {
+
     private final String insertReadings =
             "INSERT INTO sensor_temperature_readings (user_id, sensor_id,  value,  date_time) VALUES (:user_id, :sensor_id, :value, :date_time);";
-
-
-
 
 /*
 SELECT
@@ -34,8 +32,6 @@ FROM sensor_temperature_readings
   WHERE date_time   BETWEEN '2018-02-03 21:20:00.000000'  AND '2018-02-05 22:50:00.000000'
 GROUP BY time
 ORDER BY time;
-
-
     */
 
     private final String selectSmartReadings = "" +
@@ -56,7 +52,6 @@ ORDER BY time;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public void add(ReadingDbo dbo) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("user_id", dbo.getUserId())
@@ -64,6 +59,22 @@ ORDER BY time;
                 .addValue("value", dbo.getValue())
                 .addValue("date_time", new Timestamp(dbo.getTimeStamp()));
         jdbcTemplate.update(insertReadings, parameterSource);
+    }
+
+    public void addBatch(List<ReadingDbo> readingsDbos) {
+
+        MapSqlParameterSource[] mapSqlParameterSource = new MapSqlParameterSource[readingsDbos.size()];
+
+        for (int i = 0; i < readingsDbos.size(); i++) {
+            ReadingDbo dbo = readingsDbos.get(i);
+            mapSqlParameterSource[i] = new MapSqlParameterSource()
+                    .addValue("user_id", dbo.getUserId())
+                    .addValue("sensor_id", dbo.getSensorId())
+                    .addValue("value", dbo.getValue())
+                    .addValue("date_time", new Timestamp(dbo.getTimeStamp()));
+        }
+
+        jdbcTemplate.batchUpdate(insertReadings, mapSqlParameterSource);
     }
 
     private ReadingDbo build(@NonNull ResultSet rs) throws SQLException {
@@ -77,7 +88,6 @@ ORDER BY time;
 
     }
 
-
     public List<ReadingDbo> findByIdAndUserIdInInterval(long sensorId, long userId, int size, long from, long to) {
 
         long bucketSize = (to - from) / 1000 / size;
@@ -90,10 +100,10 @@ ORDER BY time;
                         .addValue("from", new Timestamp(from))
                         .addValue("user_id", userId)
                         .addValue("sensor_id", sensorId),
-                (rs, rowNum) -> buildAgregation(rs));
+                (rs, rowNum) -> buildAggregation(rs));
     }
 
-    private ReadingDbo buildAgregation(@NonNull ResultSet rs) throws SQLException {
+    private ReadingDbo buildAggregation(@NonNull ResultSet rs) throws SQLException {
 
         return ReadingDbo.builder()
                 .value(rs.getFloat("value"))
@@ -108,7 +118,5 @@ ORDER BY time;
                         .addValue("sensor_id", sensorId)
                         .addValue("user_id", userId),
                 (rs, rowNum) -> build(rs));
-
     }
-
 }
