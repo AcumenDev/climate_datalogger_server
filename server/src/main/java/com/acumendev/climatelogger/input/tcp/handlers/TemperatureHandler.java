@@ -2,10 +2,9 @@ package com.acumendev.climatelogger.input.tcp.handlers;
 
 import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
 import com.acumendev.climatelogger.protocol.TemperatureOuterClass;
-import com.acumendev.climatelogger.repository.NotifyQueueRepository;
-import com.acumendev.climatelogger.repository.SensorRepository;
+import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsAsyncRepository;
+import com.acumendev.climatelogger.repository.SensorAsyncRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
-import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureSettingRepository;
 import com.acumendev.climatelogger.repository.temperature.dto.ReadingDbo;
 import com.acumendev.climatelogger.repository.temperature.dto.TempSettingsDbo;
@@ -15,31 +14,36 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.BaseMessage> {
 
-
     private final SensorDbo sensorDbo;
     private final TemperatureSettingRepository settingRepository;
-    private final NotifyQueueRepository notifyQueueRepository;
-    private final SensorRepository sensorRepository;
+    private final TemperatureReadingsAsyncRepository temperatureReadingsAsyncRepository;
     private final Channel channel;
+    private final SensorAsyncRepository sensorAsyncRepository;
 
     public TemperatureHandler(SensorDbo sensorDbo,
                               Channel channel,
                               TemperatureSettingRepository settingRepository,
-                              NotifyQueueRepository notifyQueueRepository,
-                              SensorRepository sensorRepository) {
+                              TemperatureReadingsAsyncRepository temperatureReadingsAsyncRepository,
+                              SensorAsyncRepository sensorAsyncRepository) {
 
         this.sensorDbo = sensorDbo;
         this.channel = channel;
         this.settingRepository = settingRepository;
-        this.notifyQueueRepository = notifyQueueRepository;
-
-        this.sensorRepository = sensorRepository;
+        this.temperatureReadingsAsyncRepository = temperatureReadingsAsyncRepository;
+        this.sensorAsyncRepository = sensorAsyncRepository;
     }
 
     @Override
     public void init() {
-//        channel.writeAndFlush(TemperatureProtocol.BaseMessage.newBuilder()
-//                .setType(TemperatureProtocol.PacketType.getActualConfig).build());
+        sendRequestGetActualConfig();
+    }
+
+    private void sendRequestGetActualConfig() {
+        BaseMessageOuterClass.BaseMessage.Builder msg = BaseMessageOuterClass.BaseMessage.newBuilder();
+        TemperatureOuterClass.Temperature.Builder temperature = TemperatureOuterClass.Temperature.newBuilder();
+        temperature.setConfig(TemperatureOuterClass.Config.getDefaultInstance());
+        msg.setTemperature(temperature);
+        channel.write(msg.build());
     }
 
     @Override
@@ -53,7 +57,7 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
     }
 
     private void updateLastActiveTime() {
-        sensorRepository.updateActive(sensorDbo.getId(), System.currentTimeMillis());
+        sensorAsyncRepository.sensorActive(sensorDbo.getId(), System.currentTimeMillis());
 
     }
 
@@ -77,10 +81,10 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
                     .timeStamp(System.currentTimeMillis())
                     .value(request.getCurrent())
                     .build();
-
-            notifyQueueRepository.add(dbo);
-
             updateLastActiveTime();
+            temperatureReadingsAsyncRepository.add(dbo);
+
+
         } else if (temperature.hasConfig()) {
             TemperatureOuterClass.Config config = temperature.getConfig();
             TempSettingsDbo settingsDbo = TempSettingsDbo.builder()
@@ -89,11 +93,11 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
                     .target(config.getTarget())
                     .tuningSensor(config.getTuningSensor())
                     .build();
-
-            settingRepository.update(settingsDbo);
             updateLastActiveTime();
+            settingRepository.update(settingsDbo);
         } else {
             log.error("Не поддерживаемый тип пакета {}", msg);
         }
+
     }
 }

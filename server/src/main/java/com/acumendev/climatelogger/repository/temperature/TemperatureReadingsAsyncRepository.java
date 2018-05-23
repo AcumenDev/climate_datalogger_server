@@ -1,4 +1,4 @@
-package com.acumendev.climatelogger.repository;
+package com.acumendev.climatelogger.repository.temperature;
 
 import com.acumendev.climatelogger.repository.temperature.dto.ReadingDbo;
 import com.acumendev.climatelogger.utils.JsonUtils;
@@ -13,7 +13,7 @@ import java.util.concurrent.BlockingQueue;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class NotifyQueueRepository {
+public class TemperatureReadingsAsyncRepository {
 
     private final BlockingQueue<ReadingDbo> notifyQueue;
 

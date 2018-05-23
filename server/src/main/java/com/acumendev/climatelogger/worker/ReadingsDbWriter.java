@@ -1,6 +1,6 @@
 package com.acumendev.climatelogger.worker;
 
-import com.acumendev.climatelogger.repository.NotifyQueueRepository;
+import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsAsyncRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.dto.ReadingDbo;
 import com.acumendev.climatelogger.utils.ThreadTemplate;
@@ -12,21 +12,22 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class DbWriter extends ThreadTemplate {
+public class ReadingsDbWriter extends ThreadTemplate {
 
-    private final NotifyQueueRepository notifyQueueRepository;
+    ///todo подумать над обобщение
+    private final TemperatureReadingsAsyncRepository temperatureReadingsAsyncRepository;
     private final TemperatureReadingsRepository readingsRepository;
     private final int batchSize;
     private final long flushTimeout;
     private final long idleTimeout;
     private long lastWrite;
 
-    public DbWriter(NotifyQueueRepository notifyQueueRepository,
-                    TemperatureReadingsRepository readingsRepository,
-                    @Value("${write.sql.batch.size:10}") int batchSize,
-                    @Value("${write.sql.flush.timeout:15000}") long flushTimeout,
-                    @Value("${write.sql.idle.timeout:2000}") long idleTimeout) {
-        this.notifyQueueRepository = notifyQueueRepository;
+    public ReadingsDbWriter(TemperatureReadingsAsyncRepository temperatureReadingsAsyncRepository,
+                            TemperatureReadingsRepository readingsRepository,
+                            @Value("${write.sql.batch.size:10}") int batchSize,
+                            @Value("${write.sql.flush.timeout:5000}") long flushTimeout,
+                            @Value("${write.sql.idle.timeout:2000}") long idleTimeout) {
+        this.temperatureReadingsAsyncRepository = temperatureReadingsAsyncRepository;
         this.readingsRepository = readingsRepository;
         this.batchSize = batchSize;
         this.flushTimeout = flushTimeout;
@@ -38,16 +39,16 @@ public class DbWriter extends ThreadTemplate {
     protected void work() {
 
         long nextWriteTime = lastWrite + flushTimeout;
-        long queueSize = notifyQueueRepository.size();
+        long queueSize = temperatureReadingsAsyncRepository.size();
 
-        if (System.currentTimeMillis() < nextWriteTime && queueSize < batchSize || notifyQueueRepository.isQueueEmpty()) {
+        if (System.currentTimeMillis() < nextWriteTime && queueSize < batchSize || temperatureReadingsAsyncRepository.isQueueEmpty()) {
             log.debug("Условие записи не наступило");
             safeSleep(idleTimeout);
             return;
         }
 
-        List<ReadingDbo> readingDbos = notifyQueueRepository.getBatch(batchSize);
-        readingsRepository.addBatch(readingDbos);
+        List<ReadingDbo> readingDbos = temperatureReadingsAsyncRepository.getBatch(batchSize);
+        readingsRepository.saveBatch(readingDbos);
         lastWrite = System.currentTimeMillis();
         log.debug("Записано в БД {} записей, в очереди {}", readingDbos.size(), queueSize);
         safeSleep(idleTimeout);

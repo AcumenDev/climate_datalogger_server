@@ -3,10 +3,9 @@ package com.acumendev.climatelogger.input;
 import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
 import com.acumendev.climatelogger.input.tcp.handlers.TemperatureHandler;
 import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
-import com.acumendev.climatelogger.repository.NotifyQueueRepository;
-import com.acumendev.climatelogger.repository.SensorRepository;
+import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsAsyncRepository;
+import com.acumendev.climatelogger.repository.SensorAsyncRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
-import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureSettingRepository;
 import com.acumendev.climatelogger.service.SensorDescriptor;
 import io.netty.channel.Channel;
@@ -23,19 +22,20 @@ public class AuthHandler {
     private final Map<Long, SensorHandler> sensorsActiveSession;
 
     private final TemperatureSettingRepository settingRepository;
-    private final NotifyQueueRepository notifyQueueRepository;
-    private final SensorRepository sensorRepository;
+    private final TemperatureReadingsAsyncRepository temperatureReadingsAsyncRepository;
+
+    private final SensorAsyncRepository sensorAsyncRepository;
 
     public AuthHandler(Map<SensorDescriptor, SensorDbo> sensorsEnabled,
                        Map<Long, SensorHandler> sensorsActiveSession,
                        TemperatureSettingRepository settingRepository,
-                       NotifyQueueRepository notifyQueueRepository,
-                       SensorRepository sensorRepository) {
+                       TemperatureReadingsAsyncRepository temperatureReadingsAsyncRepository,
+                       SensorAsyncRepository sensorAsyncRepository) {
         this.sensorsEnabled = sensorsEnabled;
         this.sensorsActiveSession = sensorsActiveSession;
         this.settingRepository = settingRepository;
-        this.notifyQueueRepository = notifyQueueRepository;
-        this.sensorRepository = sensorRepository;
+        this.temperatureReadingsAsyncRepository = temperatureReadingsAsyncRepository;
+        this.sensorAsyncRepository = sensorAsyncRepository;
     }
 
     public SensorHandler<BaseMessageOuterClass.BaseMessage> auth(Channel channel, String channelId, BaseMessageOuterClass.Auth authRequest) {
@@ -64,7 +64,7 @@ public class AuthHandler {
 
         switch (sensorDbo.getType()) {
             case 1: {
-                return new TemperatureHandler(sensorDbo, channel, settingRepository, notifyQueueRepository, sensorRepository);
+                return new TemperatureHandler(sensorDbo, channel, settingRepository, temperatureReadingsAsyncRepository, sensorAsyncRepository);
             }
             default: {
                 log.error("Не смогли создать обработчик датчика {}", sensorDbo);

@@ -10,13 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @AllArgsConstructor
 public class SensorRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final String updateActiveTime = "UPDATE sensor SET last_active_date_time = :last_active_date_time WHERE id=:id;";
-    private final String selectByLogin = "SELECT * FROM sensor WHERE user_id = :user_id;";
+  private final String selectByLogin = "SELECT * FROM sensor WHERE user_id = :user_id;";
 
     private final String selectEnabled = "SELECT * FROM sensor WHERE state = TRUE;";
     private final String insertSensor = "INSERT INTO sensor (user_id, name, num, type, api_key, description,create_time, state) " +
@@ -25,24 +25,7 @@ public class SensorRepository {
     private final String selectByIdAndUserId = "SELECT * FROM sensor WHERE id=:id AND user_id = :user_id;";
 
 
-    public void updateActive(List<Long> sensorsIds) {
-        Long time = System.currentTimeMillis();
-        MapSqlParameterSource[] mapSqlParameterSource = new MapSqlParameterSource[sensorsIds.size()];
-        for (int i = 0; i < sensorsIds.size(); i++) {
-            Long item = sensorsIds.get(i);
-            mapSqlParameterSource[i] = new MapSqlParameterSource()
-                    .addValue("id", item)
-                    .addValue("last_active_date_time", new Timestamp(time));
-        }
-        jdbcTemplate.batchUpdate(updateActiveTime, mapSqlParameterSource);
-    }
 
-    public void updateActive(long sensorsId, long time) {
-        jdbcTemplate.update(updateActiveTime,
-                new MapSqlParameterSource("id", sensorsId)
-                        .addValue("last_active_date_time",
-                                new Timestamp(time)));
-    }
 
     public List<SensorDbo> getAllByUserId(long userId) {
         return jdbcTemplate.query(selectByLogin,
@@ -57,7 +40,7 @@ public class SensorRepository {
                 .name(rs.getString("name"))
                 .num(rs.getInt("num"))
                 .type(rs.getInt("type"))
-                .apiKey(rs.getString("api_key"))
+                .apiKey(rs.getString("api_key"))  // ( java.util.UUID ) rs.getObject( "api_key" ); rs.getObject("",UUID.class)
                 .description(rs.getString("description"))
                 .state(rs.getBoolean("state"))
                 .createTime(rs.getTimestamp("create_time").getTime())
@@ -78,7 +61,7 @@ public class SensorRepository {
                 .addValue("name", sensorDbo.getName())
                 .addValue("num", sensorDbo.getNum())
                 .addValue("type", sensorDbo.getType())
-                .addValue("apiKey", sensorDbo.getApiKey())
+                .addValue("apiKey", UUID.fromString(sensorDbo.getApiKey()))
                 .addValue("description", sensorDbo.getDescription())
                 .addValue("createTime", new Timestamp(sensorDbo.getCreateTime()))
                 .addValue("state", sensorDbo.isState());

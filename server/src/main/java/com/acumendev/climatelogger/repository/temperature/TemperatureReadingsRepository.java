@@ -52,7 +52,7 @@ ORDER BY time;
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void add(ReadingDbo dbo) {
+    public void save(ReadingDbo dbo) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("user_id", dbo.getUserId())
                 .addValue("sensor_id", dbo.getSensorId())
@@ -61,7 +61,7 @@ ORDER BY time;
         jdbcTemplate.update(insertReadings, parameterSource);
     }
 
-    public void addBatch(List<ReadingDbo> readingsDbos) {
+    public void saveBatch(List<ReadingDbo> readingsDbos) {
 
         MapSqlParameterSource[] mapSqlParameterSource = new MapSqlParameterSource[readingsDbos.size()];
 

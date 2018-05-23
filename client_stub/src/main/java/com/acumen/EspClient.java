@@ -8,6 +8,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.DoubleStream;
 
@@ -36,6 +38,7 @@ public class EspClient extends Thread  {
 
     @Override
     public void run() {
+
         state = true;
 
         while (state) {
