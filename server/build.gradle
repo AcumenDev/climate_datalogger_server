@@ -30,7 +30,6 @@ bootJar {
 }
 
 
-
 findbugs{
     ignoreFailures=true
     findbugsTest.enabled=false
@@ -52,13 +51,10 @@ pmd {
     pmdTest.enabled=false
 }
 
-
-
-
-
 dependencies {
 
     compile project(':protocol')
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
     compile group: 'org.projectlombok', name: 'lombok'
     compile("org.springframework.boot:spring-boot-devtools")

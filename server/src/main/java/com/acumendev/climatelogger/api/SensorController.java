@@ -7,8 +7,6 @@ import com.acumendev.climatelogger.api.dto.mapper.SensorDtoMapper;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.service.SensorManagerService;
 import com.acumendev.climatelogger.type.CurrentUser;
-import io.micrometer.core.annotation.Timed;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +16,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
 public class SensorController {
     private final SensorRepository sensorRepository;
     private final SensorManagerService sensorManager;
+
+    public SensorController(SensorRepository sensorRepository, SensorManagerService sensorManager) {
+        this.sensorRepository = sensorRepository;
+        this.sensorManager = sensorManager;
+    }
 
     @GetMapping(path = "/api/sensors")
     public List<SensorDto> getSensors(@AuthenticationPrincipal CurrentUser user) {

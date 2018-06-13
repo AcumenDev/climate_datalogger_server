@@ -4,7 +4,6 @@ import com.acumendev.climatelogger.api.dto.BaseResponse;
 import com.acumendev.climatelogger.service.sensors.SensorService;
 import com.acumendev.climatelogger.type.CurrentUser;
 import io.micrometer.core.annotation.Timed;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +15,13 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
 public class ReadingsController {
 
-    Map<Integer, SensorService> sensorsService;
+    private final Map<Integer, SensorService> sensorsService;
+
+    public ReadingsController(Map<Integer, SensorService> sensorsService) {
+        this.sensorsService = sensorsService;
+    }
 
     @Timed(value = "api.readings", longTask = true)
     @GetMapping(path = "/api/readings")
@@ -28,7 +30,7 @@ public class ReadingsController {
                                  @RequestParam("sensor_type") int sensorType,
                                  @RequestParam(value = "from", required = false) Long from,
                                  @RequestParam(value = "to", required = false) Long to) {
-        log.warn("{} {} {} {} {}", user.getId(), sensorId, sensorType, new Timestamp(from), new Timestamp(to));
+        log.warn("{} {} {} {} {}", user.getId(), sensorId, sensorType, from != null ? new Timestamp(from) : null, to != null ? new Timestamp(to) : null);
 
         SensorService service = sensorsService.get(sensorType);
 

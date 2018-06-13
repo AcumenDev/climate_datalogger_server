@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
@@ -57,7 +58,7 @@ public class SensorAsyncRepository {
         }
     }
 
-    private class SensorActiveEvent {
+    private static class SensorActiveEvent {
         private final long id;
         private final long time;
 
@@ -80,6 +81,11 @@ public class SensorAsyncRepository {
             if (o == null || getClass() != o.getClass()) return false;
             SensorActiveEvent that = (SensorActiveEvent) o;
             return id == that.id;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, time);
         }
     }
 }
