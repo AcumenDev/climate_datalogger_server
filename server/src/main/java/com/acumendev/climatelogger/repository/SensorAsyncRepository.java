@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Repository
 @AllArgsConstructor
 public class SensorAsyncRepository {
-    private final String updateActiveTime = "UPDATE sensor SET last_active_date_time = :last_active_date_time WHERE id=:id;";
+    private static final String UPDATE_ACTIVE_TIME = "UPDATE sensor SET last_active_date_time = :last_active_date_time WHERE id=:id;";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
 
@@ -38,7 +38,7 @@ public class SensorAsyncRepository {
                     .addValue("id", item.getId())
                     .addValue("last_active_date_time", new Timestamp(item.getTime()));
         }
-        jdbcTemplate.batchUpdate(updateActiveTime, mapSqlParameterSource);
+        jdbcTemplate.batchUpdate(UPDATE_ACTIVE_TIME, mapSqlParameterSource);
     }
 
     @Scheduled(fixedRate = 2000)

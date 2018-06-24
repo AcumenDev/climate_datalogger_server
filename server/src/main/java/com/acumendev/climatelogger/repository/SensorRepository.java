@@ -1,7 +1,6 @@
 package com.acumendev.climatelogger.repository;
 
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
-import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,22 +12,23 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-@AllArgsConstructor
 public class SensorRepository {
-    private final NamedParameterJdbcTemplate jdbcTemplate;
-  private final String selectByLogin = "SELECT * FROM sensor WHERE user_id = :user_id;";
-
-    private final String selectEnabled = "SELECT * FROM sensor WHERE state = TRUE;";
-    private final String insertSensor = "INSERT INTO sensor (user_id, name, num, type, api_key, description,create_time, state) " +
+    private static final String SELECT_BY_LOGIN_AND_IDS = "SELECT * FROM sensor WHERE user_id = :user_id and id in (:ids);";
+    private static final String SELECT_BY_LOGIN = "SELECT * FROM sensor WHERE user_id = :user_id;";
+    private static final String SELECT_ENABLED = "SELECT * FROM sensor WHERE state = TRUE;";
+    private static final String INSERT_SENSOR = "INSERT INTO sensor (user_id, name, num, type, api_key, description,create_time, state) " +
             "VALUES (:userId, :name, :num, :type, :apiKey, :description, :createTime, :state) RETURNING * ;";
-
-    private final String selectByIdAndUserId = "SELECT * FROM sensor WHERE id=:id AND user_id = :user_id;";
-
+    private static final String SELECT_BY_ID_AND_USER_ID = "SELECT * FROM sensor WHERE id=:id AND user_id = :user_id;";
 
 
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public SensorRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<SensorDbo> getAllByUserId(long userId) {
-        return jdbcTemplate.query(selectByLogin,
+        return jdbcTemplate.query(SELECT_BY_LOGIN,
                 new MapSqlParameterSource("user_id", userId),
                 (rs, rowNum) -> build(rs));
     }
@@ -52,7 +52,7 @@ public class SensorRepository {
     }
 
     public List<SensorDbo> getEnabled() {
-        return jdbcTemplate.query(selectEnabled, (rs, rowNum) -> build(rs));
+        return jdbcTemplate.query(SELECT_ENABLED, (rs, rowNum) -> build(rs));
     }
 
     public SensorDbo add(SensorDbo sensorDbo) {
@@ -65,16 +65,20 @@ public class SensorRepository {
                 .addValue("description", sensorDbo.getDescription())
                 .addValue("createTime", new Timestamp(sensorDbo.getCreateTime()))
                 .addValue("state", sensorDbo.isState());
-        return jdbcTemplate.queryForObject(insertSensor, parameterSource, (rs, rowNum) -> build(rs));
+        return jdbcTemplate.queryForObject(INSERT_SENSOR, parameterSource, (rs, rowNum) -> build(rs));
     }
 
     public SensorDbo getByIdAndUserId(long sensorsId, long userId) {
-        return jdbcTemplate.queryForObject(selectByIdAndUserId,
+        return jdbcTemplate.queryForObject(SELECT_BY_ID_AND_USER_ID,
                 new MapSqlParameterSource()
                         .addValue("id", sensorsId)
                         .addValue("user_id", userId),
                 (rs, rowNum) -> build(rs));
+    }
 
-
+    public List<SensorDbo> getByIds(long userId, List<Long> sensorIds) {
+        return jdbcTemplate.query(SELECT_BY_LOGIN_AND_IDS,
+                new MapSqlParameterSource("user_id", userId).addValue("ids", sensorIds),
+                (rs, rowNum) -> build(rs));
     }
 }
