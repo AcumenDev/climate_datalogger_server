@@ -21,7 +21,6 @@ public class DashboardController {
 
     @GetMapping("/api/dashboard")
     public BaseResponse get(@AuthenticationPrincipal CurrentUser user) {
-
         return BaseResponse.ok(dashboardService.getDefault(user.getId()));
     }
 }

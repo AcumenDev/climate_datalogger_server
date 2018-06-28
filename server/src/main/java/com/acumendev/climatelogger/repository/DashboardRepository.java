@@ -32,13 +32,11 @@ public class DashboardRepository {
                 });
     }
 
-
     public List<DashboardItemDbo> getItems(long dashboardId) {
         return jdbcTemplate
                 .query(GET_DASHBOARD_ITEMS,
                         new MapSqlParameterSource("dashboardId", dashboardId),
                         (rs, rowNum) ->
-
                                 new DashboardItemDbo(dashboardId, rs.getLong("sensor_id"), rs.getString("data"))
                 );
     }

@@ -28,12 +28,12 @@
             <a class="nav-link active" href="/lk/index.html">Рабочий стол</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link  " href="/lk/sensors/list.html">Датчики</a>
+            <a class="nav-link" href="/lk/sensors/list.html">Датчики</a>
         </li>
     </ul>
 
     <ul class="navbar-nav mr-4">
-        <li class="nav-item dropdown" >
+        <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">Login </a>
             <div class="dropdown-menu mr-4" aria-labelledby="navbarDropdown">
@@ -45,53 +45,54 @@
     </ul>
 </nav>
 
-
 <div class="container-fluid">
     <div class="row">
         <div class="col">
             <span>Датчики</span>
             <div id="sensors">
             </div>
-
         </div>
-        <div class="col-10">
-            <div id="chart_div">
-            </div>
+        <div class="col-10" id="charts">
         </div>
     </div>
-
 </div>
 
-
 <script id="sensors-blank" type="text/x-handlebars-template">
-
-
     <table class="table table-hover">
         <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">Название</th>
             <th scope="col">Последенее активное время</th>
-
         </tr>
         </thead>
         <tbody>
-
         {{#each this}}
         <tr class="nodeData">
             <th scope="row">{{id}}</th>
             <td>{{name}}</td>
             <td>{{prettifyDate lastActiveTime}}</td>
-
         </tr>
-
         {{/each}}
         </tbody>
     </table>
-
 </script>
 
+<script id="charts-blank" type="text/x-handlebars-template">
 
+    <span>{{data.name}}</span>
+    {{#each data.items}}
+    <div class="row">
+        <div class="col">
+            <span>{{id}}</span>
+            <span>{{name}}</span>
+            <canvas class="chart_target" id="chart_div_{{id}}" data-id="{{id}}" data-name="{{name}}">
+            </canvas>
+        </div>
+    </div>
+
+    {{/each}}
+</script>
 </body>
 
 </html>
