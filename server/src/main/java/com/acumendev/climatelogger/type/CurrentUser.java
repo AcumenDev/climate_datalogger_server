@@ -9,23 +9,19 @@ import java.util.Collection;
 public class CurrentUser implements UserDetails {
 
     private final long id;
-    private final String login;
+    private final String userName;
     private final String password;
     private final boolean state;
 
-    public CurrentUser(long id, String login, String password, boolean state) {
+    public CurrentUser(long id, String userName, String password, boolean state) {
         this.id = id;
-        this.login = login;
+        this.userName = userName;
         this.password = password;
         this.state = state;
     }
 
     public long getId() {
         return id;
-    }
-
-    public String getLogin() {
-        return login;
     }
 
     public boolean isState() {
@@ -44,7 +40,7 @@ public class CurrentUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return userName;
     }
 
     @Override

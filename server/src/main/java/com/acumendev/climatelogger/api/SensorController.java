@@ -7,16 +7,18 @@ import com.acumendev.climatelogger.api.dto.mapper.SensorDtoMapper;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.service.SensorManagerService;
 import com.acumendev.climatelogger.type.CurrentUser;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @RestController
 public class SensorController {
+    private final Logger LOGGER = LoggerFactory.getLogger(ReadingsController.class);
     private final SensorRepository sensorRepository;
     private final SensorManagerService sensorManager;
 
@@ -38,7 +40,7 @@ public class SensorController {
         try {
             sensorManager.create(user, dto);
         } catch (Exception e) {
-            log.error("Ошибка при создании датчика {} {}", dto, e);
+            LOGGER.error("Ошибка при создании датчика {} {}", dto, e);
             return BaseResponse.error(1, "Ошибка при создании датчика.");
         }
         return BaseResponse.ok();

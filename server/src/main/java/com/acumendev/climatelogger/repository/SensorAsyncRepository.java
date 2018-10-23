@@ -1,7 +1,8 @@
 package com.acumendev.climatelogger.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.acumendev.climatelogger.input.tcp.TcpServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,15 +16,20 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
-@Slf4j
+
 @Repository
-@AllArgsConstructor
 public class SensorAsyncRepository {
+    private final Logger LOGGER = LoggerFactory.getLogger(SensorAsyncRepository.class);
+
     private static final String UPDATE_ACTIVE_TIME = "UPDATE sensor SET last_active_date_time = :last_active_date_time WHERE id=:id;";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
 
     private final BlockingQueue<SensorActiveEvent> sensorsIdsQueue = new LinkedBlockingQueue<>();
+
+    public SensorAsyncRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
 
     public void sensorActive(long id, long time) {
@@ -48,11 +54,11 @@ public class SensorAsyncRepository {
         List<SensorActiveEvent> distinctIds = ids.stream().distinct().collect(Collectors.toList());
 
         if (!distinctIds.isEmpty()) {
-            log.debug("Запись в бд времени последней активности сенсоров {}", distinctIds);
+            LOGGER.debug("Запись в бд времени последней активности сенсоров {}", distinctIds);
             try {
                 updateActive(distinctIds);
             } catch (Exception e) {
-                log.error("Ошибка записи в бд, времени последней активности сенсоров {}", distinctIds);
+                LOGGER.error("Ошибка записи в бд, времени последней активности сенсоров {}", distinctIds);
 
             }
         }

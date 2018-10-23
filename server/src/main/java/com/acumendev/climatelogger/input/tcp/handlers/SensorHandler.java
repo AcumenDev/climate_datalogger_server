@@ -3,7 +3,7 @@ package com.acumendev.climatelogger.input.tcp.handlers;
 
 public interface SensorHandler<T> {
 
-    long getSensorId();
+    int getSensorId();
 
     void disconnect();
 

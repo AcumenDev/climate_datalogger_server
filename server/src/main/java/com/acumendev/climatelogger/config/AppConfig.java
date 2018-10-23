@@ -26,10 +26,7 @@ public class AppConfig {
 
         sensorList.forEach(sensorDbo -> {
             SensorDescriptor sensorDescriptor =
-                    SensorDescriptor.builder()
-                            .type(sensorDbo.getType())
-                            .apiKey(sensorDbo.getApiKey())
-                            .build();
+                    new SensorDescriptor(sensorDbo.apiKey, sensorDbo.type);
 
             sensorDbos.put(sensorDescriptor, sensorDbo);
         });
@@ -39,7 +36,7 @@ public class AppConfig {
 
     /////Сенсоры с активными сессиями до оборудования
     @Bean
-    Map<Long, SensorHandler> sensorsActiveSession() {
+    Map<Integer, SensorHandler> sensorsActiveSession() {
         return new ConcurrentHashMap<>();
     }
 

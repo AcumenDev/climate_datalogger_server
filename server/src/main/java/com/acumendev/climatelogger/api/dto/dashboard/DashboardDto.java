@@ -14,7 +14,7 @@ public class DashboardDto {
         this.id = id;
         this.name = name;
         this.items = items.stream()
-                .map(sensorDbo -> new DashboardItem(sensorDbo.getId(), sensorDbo.getName()))
+                .map(sensorDbo -> new DashboardItem(sensorDbo.id, sensorDbo.name))
                 .collect(Collectors.toList());
     }
 

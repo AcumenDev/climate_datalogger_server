@@ -54,10 +54,10 @@ ORDER BY time;
 
     public void save(ReadingDbo dbo) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("user_id", dbo.getUserId())
-                .addValue("sensor_id", dbo.getSensorId())
-                .addValue("value", dbo.getValue())
-                .addValue("date_time", new Timestamp(dbo.getTimeStamp()));
+                .addValue("user_id", dbo.userId)
+                .addValue("sensor_id", dbo.sensorId)
+                .addValue("value", dbo.value)
+                .addValue("date_time", new Timestamp(dbo.timeStamp));
         jdbcTemplate.update(insertReadings, parameterSource);
     }
 
@@ -68,10 +68,10 @@ ORDER BY time;
         for (int i = 0; i < readingsDbos.size(); i++) {
             ReadingDbo dbo = readingsDbos.get(i);
             mapSqlParameterSource[i] = new MapSqlParameterSource()
-                    .addValue("user_id", dbo.getUserId())
-                    .addValue("sensor_id", dbo.getSensorId())
-                    .addValue("value", dbo.getValue())
-                    .addValue("date_time", new Timestamp(dbo.getTimeStamp()));
+                    .addValue("user_id", dbo.userId)
+                    .addValue("sensor_id", dbo.sensorId)
+                    .addValue("value", dbo.value)
+                    .addValue("date_time", new Timestamp(dbo.timeStamp));
         }
 
         jdbcTemplate.batchUpdate(insertReadings, mapSqlParameterSource);
@@ -79,12 +79,11 @@ ORDER BY time;
 
     private ReadingDbo build(@NonNull ResultSet rs) throws SQLException {
 
-        return ReadingDbo.builder()
-                .userId(rs.getLong("user_id"))
-                .sensorId(rs.getInt("sensor_id"))
-                .value(rs.getFloat("value"))
-                .timeStamp(rs.getTimestamp("date_time").getTime())
-                .build();
+        return new ReadingDbo(
+                rs.getLong("user_id"),
+                rs.getInt("sensor_id"),
+                rs.getFloat("value"),
+                rs.getTimestamp("date_time").getTime());
 
     }
 
@@ -105,10 +104,8 @@ ORDER BY time;
 
     private ReadingDbo buildAggregation(@NonNull ResultSet rs) throws SQLException {
 
-        return ReadingDbo.builder()
-                .value(rs.getFloat("value"))
-                .timeStamp(rs.getTimestamp("time").getTime())
-                .build();
+        return new ReadingDbo(rs.getFloat("value"), rs.getTimestamp("time").getTime());
+
     }
 
     public List<ReadingDbo> findByIdAndUserId(long sensorId, long userId) {

@@ -15,7 +15,8 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +24,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Map;
 
-@Slf4j
+
 @Component
 public class TcpServer extends Thread {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(TcpServer.class);
 
     private final Map<String, SensorHandler<BaseMessageOuterClass.BaseMessage>> sensorHandlers;
     private final AuthHandler authHandler;
@@ -33,7 +36,8 @@ public class TcpServer extends Thread {
     private ChannelFuture future;
 
     public TcpServer(Map<String, SensorHandler<BaseMessageOuterClass.BaseMessage>> sensorHandlers,
-                     AuthHandler authHandler, @Value("${input.tcp.port:9999}") int port) {
+                     AuthHandler authHandler,
+                     @Value("${input.tcp.port:9999}") int port) {
         this.sensorHandlers = sensorHandlers;
         this.authHandler = authHandler;
         this.port = port;
@@ -66,13 +70,14 @@ public class TcpServer extends Thread {
                         }
                     }).option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.TCP_NODELAY, true)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
+                    .childOption(ChannelOption.SO_REUSEADDR, true);
+
             future = serverBootstrap.bind(port).sync();
             future.channel().closeFuture().awaitUninterruptibly().sync();
 
         } catch (Exception e) {
-            log.error("Ошбка запуска  сервера tcp", e);
-
+            LOGGER.error("Ошбка запуска  сервера tcp", e);
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
@@ -82,11 +87,11 @@ public class TcpServer extends Thread {
     @PreDestroy
     private void destroyServer() {
         try {
-            log.info("Остановка сервера tcp {}", future);
+            LOGGER.info("Остановка сервера tcp {}", future);
             future.channel().disconnect();
             future.channel().close();
         } catch (Exception e) {
-            log.error("Ошбка остановки сервера tcp", e);
+            LOGGER.error("Ошбка остановки сервера tcp", e);
         }
     }
 }

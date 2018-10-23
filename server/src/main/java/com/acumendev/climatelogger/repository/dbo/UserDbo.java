@@ -1,13 +1,16 @@
 package com.acumendev.climatelogger.repository.dbo;
 
-import lombok.Builder;
-import lombok.Getter;
 
-@Getter
-@Builder
 public class UserDbo {
-    private String login;
-    private long id;
-    private String password;
-    private boolean state;
+    public final String login;
+    public final long id;
+    public final String password;
+    public final boolean state;
+
+    public UserDbo(String login, long id, String password, boolean state) {
+        this.login = login;
+        this.id = id;
+        this.password = password;
+        this.state = state;
+    }
 }

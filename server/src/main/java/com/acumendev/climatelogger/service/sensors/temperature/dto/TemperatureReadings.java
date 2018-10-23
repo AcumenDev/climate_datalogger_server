@@ -1,13 +1,23 @@
 package com.acumendev.climatelogger.service.sensors.temperature.dto;
 
-import lombok.Builder;
-import lombok.Getter;
 
-@Getter
-@Builder
 public class TemperatureReadings {
-    private final float value;
-    private final boolean heatingState;
-    private final boolean coolingState;
-    private final Long dateTime;
+    public final float value;
+    public final boolean heatingState;
+    public final boolean coolingState;
+    public final Long dateTime;
+
+    public TemperatureReadings(float value, boolean heatingState, boolean coolingState, Long dateTime) {
+        this.value = value;
+        this.heatingState = heatingState;
+        this.coolingState = coolingState;
+        this.dateTime = dateTime;
+    }
+
+    public TemperatureReadings(float value, Long dateTime) {
+        this.value = value;
+        this.heatingState = false;
+        this.coolingState = false;
+        this.dateTime = dateTime;
+    }
 }

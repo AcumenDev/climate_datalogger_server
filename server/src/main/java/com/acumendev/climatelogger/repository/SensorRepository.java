@@ -34,21 +34,25 @@ public class SensorRepository {
     }
 
     private SensorDbo build(ResultSet rs) throws SQLException {
-        return SensorDbo.builder()
-                .id(rs.getLong("id"))
-                .userId(rs.getLong("user_id"))
-                .name(rs.getString("name"))
-                .num(rs.getInt("num"))
-                .type(rs.getInt("type"))
-                .apiKey(rs.getString("api_key"))  // ( java.util.UUID ) rs.getObject( "api_key" ); rs.getObject("",UUID.class)
-                .description(rs.getString("description"))
-                .state(rs.getBoolean("state"))
-                .createTime(rs.getTimestamp("create_time").getTime())
-                .lastActiveDateTime(
-                        rs.getTimestamp("last_active_date_time") != null ?
-                                rs.getTimestamp("last_active_date_time").getTime()
-                                : null)
-                .build();
+
+        // ( java.util.UUID ) rs.getObject( "api_key" ); rs.getObject("",UUID.class)
+
+        Long lastActiveDateTime =
+                rs.getTimestamp("last_active_date_time") != null ?
+                        rs.getTimestamp("last_active_date_time").getTime() :
+                        null;
+
+        return new SensorDbo(
+                rs.getInt("id"),
+                rs.getLong("user_id"),
+                rs.getString("name"),
+                rs.getInt("num"),
+                rs.getInt("type"),
+                rs.getString("description"),
+                lastActiveDateTime,
+                rs.getBoolean("state"),
+                rs.getString("api_key"),
+                rs.getTimestamp("create_time").getTime());
     }
 
     public List<SensorDbo> getEnabled() {
@@ -57,14 +61,14 @@ public class SensorRepository {
 
     public SensorDbo add(SensorDbo sensorDbo) {
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
-                .addValue("userId", sensorDbo.getUserId())
-                .addValue("name", sensorDbo.getName())
-                .addValue("num", sensorDbo.getNum())
-                .addValue("type", sensorDbo.getType())
-                .addValue("apiKey", UUID.fromString(sensorDbo.getApiKey()))
-                .addValue("description", sensorDbo.getDescription())
-                .addValue("createTime", new Timestamp(sensorDbo.getCreateTime()))
-                .addValue("state", sensorDbo.isState());
+                .addValue("userId", sensorDbo.userId)
+                .addValue("name", sensorDbo.name)
+                .addValue("num", sensorDbo.num)
+                .addValue("type", sensorDbo.type)
+                .addValue("apiKey", UUID.fromString(sensorDbo.apiKey))
+                .addValue("description", sensorDbo.description)
+                .addValue("createTime", new Timestamp(sensorDbo.createTime))
+                .addValue("state", sensorDbo.state);
         return jdbcTemplate.queryForObject(INSERT_SENSOR, parameterSource, (rs, rowNum) -> build(rs));
     }
 

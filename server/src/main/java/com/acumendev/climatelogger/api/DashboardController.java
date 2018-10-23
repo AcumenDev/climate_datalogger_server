@@ -5,6 +5,8 @@ import com.acumendev.climatelogger.service.dashboard.DashboardService;
 import com.acumendev.climatelogger.type.CurrentUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -22,5 +24,14 @@ public class DashboardController {
     @GetMapping("/api/dashboard")
     public BaseResponse get(@AuthenticationPrincipal CurrentUser user) {
         return BaseResponse.ok(dashboardService.getDefault(user.getId()));
+    }
+
+    @PostMapping("/api/dashboard")
+    public BaseResponse create(@AuthenticationPrincipal CurrentUser user, @RequestBody String name) {
+
+        dashboardService.create(user.getId(), name);
+
+
+        return BaseResponse.ok();
     }
 }

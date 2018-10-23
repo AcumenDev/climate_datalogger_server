@@ -1,17 +1,19 @@
 buildscript {
+    ext {
+        springBootVersion = '2.0.6.RELEASE'
+    }
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
 apply plugin: 'java'
+apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-
 
 //apply plugin: 'checkstyle'
 apply plugin: 'pmd'
@@ -34,6 +36,7 @@ findbugs{
     ignoreFailures=true
     findbugsTest.enabled=false
 }
+
 /*tasks.withType(FindBugs) {
     reports {
         xml.enabled = false
@@ -63,8 +66,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     compile group: 'org.springframework.boot', name: 'spring-boot-devtools'
-// https://mvnrepository.com/artifact/io.netty/netty-all
-    compile group: 'io.netty', name: 'netty-all'//, version: '4.1.19.Final'
+    compile group: 'io.netty', name: 'netty-all'
     compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.5.1'
 
     runtime group: 'org.postgresql', name: 'postgresql'

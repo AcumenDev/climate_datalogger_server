@@ -21,7 +21,8 @@ public class DashboardService {
         this.sensorRepository = sensorRepository;
     }
 
-    public DashboardDto getDefault(long userId) { ////todo 3 запроса в бд, подумать!
+    ////todo 3 запроса в бд(вызываеться при заходе на страницу, может и не важно), подумать!
+    public DashboardDto getDefault(long userId) {
         DashboardDbo dashboardDbo = dashboardRepository.getDefault(userId);
         if (dashboardDbo == null) {
             return null;
@@ -39,5 +40,9 @@ public class DashboardService {
             return new DashboardDto(dashboardDbo.id, dashboardDbo.name, sensorDbos);
         }
         return null;
+    }
+
+    public void create(long userId, String dashboardName) {
+
     }
 }

@@ -27,8 +27,10 @@ public class DashboardRepository {
     public DashboardDbo getDefault(long userId) {
         return jdbcTemplate.query(GET_DEFAULT_DASHBOARD, new MapSqlParameterSource("userId", userId),
                 rs -> {
-                    rs.next();
-                    return new DashboardDbo(rs.getLong("dashboard_id"), rs.getString("name"));
+                    if (rs.next()) {
+                        return new DashboardDbo(rs.getLong("dashboard_id"), rs.getString("name"));
+                    }
+                    return null;
                 });
     }
 
@@ -40,5 +42,4 @@ public class DashboardRepository {
                                 new DashboardItemDbo(dashboardId, rs.getLong("sensor_id"), rs.getString("data"))
                 );
     }
-
 }

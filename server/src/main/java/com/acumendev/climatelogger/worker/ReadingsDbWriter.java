@@ -4,15 +4,18 @@ import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsAsy
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsRepository;
 import com.acumendev.climatelogger.repository.temperature.dto.ReadingDbo;
 import com.acumendev.climatelogger.utils.ThreadTemplate;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Slf4j
+
 @Component
 public class ReadingsDbWriter extends ThreadTemplate {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(ReadingsDbWriter.class);
 
     ///todo подумать над обобщение
     private final TemperatureReadingsAsyncRepository temperatureReadingsAsyncRepository;
@@ -42,7 +45,7 @@ public class ReadingsDbWriter extends ThreadTemplate {
         long queueSize = temperatureReadingsAsyncRepository.size();
 
         if (System.currentTimeMillis() < nextWriteTime && queueSize < batchSize || temperatureReadingsAsyncRepository.isQueueEmpty()) {
-            log.debug("Условие записи не наступило");
+            LOGGER.debug("Условие записи не наступило");
             safeSleep(idleTimeout);
             return;
         }
@@ -50,7 +53,7 @@ public class ReadingsDbWriter extends ThreadTemplate {
         List<ReadingDbo> readingDbos = temperatureReadingsAsyncRepository.getBatch(batchSize);
         readingsRepository.saveBatch(readingDbos);
         lastWrite = System.currentTimeMillis();
-        log.debug("Записано в БД {} записей, в очереди {}", readingDbos.size(), queueSize);
+        LOGGER.debug("Записано в БД {} записей, в очереди {}", readingDbos.size(), queueSize);
         safeSleep(idleTimeout);
     }
 

@@ -1,14 +1,25 @@
 package com.acumendev.climatelogger.api.dto;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SensorCreateDto {
-    private String name;
-    private int num;
-    private int type;
-    private String description;
-    private boolean state;
+    public final String name;
+    public final int num;
+    public final int type;
+    public final String description;
+    public final boolean state;
+
+    public SensorCreateDto(
+            @JsonProperty("name") String name,
+            @JsonProperty("num") int num,
+            @JsonProperty("type") int type,
+            @JsonProperty("description") String description,
+            @JsonProperty("state") boolean state) {
+        this.name = name;
+        this.num = num;
+        this.type = type;
+        this.description = description;
+        this.state = state;
+    }
 }

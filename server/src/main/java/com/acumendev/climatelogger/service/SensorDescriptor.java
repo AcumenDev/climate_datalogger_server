@@ -1,19 +1,16 @@
 package com.acumendev.climatelogger.service;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Objects;
 
-
-@Setter
-@Getter
-@Builder
 public class SensorDescriptor {
-    private String apiKey;
-    private int type;
 
+    final public String apiKey;
+    final public int type;
+
+    public SensorDescriptor(String apiKey, int type) {
+        this.apiKey = apiKey;
+        this.type = type;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -26,7 +23,7 @@ public class SensorDescriptor {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(apiKey, type);
     }
+
 }
