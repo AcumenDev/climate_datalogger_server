@@ -7,6 +7,7 @@ import com.acumendev.climatelogger.api.dto.mapper.SensorDtoMapper;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.service.SensorManagerService;
 import com.acumendev.climatelogger.type.CurrentUser;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Api
 @RestController
 public class SensorController {
     private final Logger LOGGER = LoggerFactory.getLogger(ReadingsController.class);
@@ -50,4 +51,6 @@ public class SensorController {
     public BaseResponse getSensors(@AuthenticationPrincipal CurrentUser user, @PathVariable("id") long id) {
         return BaseResponse.ok(SensorDtoMapper.map(sensorRepository.getByIdAndUserId(id, user.getId())));
     }
+
+
 }

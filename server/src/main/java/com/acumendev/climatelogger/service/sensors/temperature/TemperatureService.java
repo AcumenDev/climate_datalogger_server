@@ -39,7 +39,6 @@ public class TemperatureService implements SensorService<List<TemperatureReading
     @Override
     public List<TemperatureReadings> getReadings(CurrentUser user, long sensorId, long from, long to, int i) {
         List<ReadingDbo> readingDbos = readingsRepository.findByIdAndUserIdInInterval(sensorId, user.getId(), i, from, to);
-
         return readingDbos.stream()
                 .map(readingDbo -> new TemperatureReadings(readingDbo.value, readingDbo.timeStamp))
                 .collect(Collectors.toList());

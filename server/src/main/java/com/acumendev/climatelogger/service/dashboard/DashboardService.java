@@ -1,6 +1,7 @@
 package com.acumendev.climatelogger.service.dashboard;
 
 import com.acumendev.climatelogger.api.dto.dashboard.DashboardDto;
+import com.acumendev.climatelogger.api.dto.dashboard.DashboardItemDto;
 import com.acumendev.climatelogger.repository.DashboardRepository;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.DashboardDbo;
@@ -43,6 +44,24 @@ public class DashboardService {
     }
 
     public void create(long userId, String dashboardName) {
+        dashboardRepository.add(new DashboardDbo(userId, dashboardName));
+    }
+
+    public void addItem(long userId, DashboardItemDto itemDto) {
+        DashboardDbo dashboardDbo = dashboardRepository.get(userId, itemDto.dashordId);
+        if (dashboardDbo == null) {
+            throw new RuntimeException(
+                    String.format("Dashboard пользователя не найден userid %d  dashboardId %d sensorId %d", userId, itemDto.dashordId, itemDto.sensorId));
+        }
+
+        SensorDbo sensorDbo = sensorRepository.getByIdAndUserId(userId, itemDto.sensorId);
+
+        if (sensorDbo == null) {
+            throw new RuntimeException(
+                    String.format("Sensor пользователя не найден userid %d  dashboardId %d sensorId %d", userId, itemDto.dashordId, itemDto.sensorId));
+        }
+
+        dashboardRepository.addItem(new DashboardItemDbo(itemDto.dashordId, itemDto.sensorId, itemDto.data));
 
     }
 }

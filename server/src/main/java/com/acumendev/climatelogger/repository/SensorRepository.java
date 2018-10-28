@@ -14,7 +14,7 @@ import java.util.UUID;
 @Repository
 public class SensorRepository {
     private static final String SELECT_BY_LOGIN_AND_IDS = "SELECT * FROM sensor WHERE user_id = :user_id and id in (:ids);";
-    private static final String SELECT_BY_LOGIN = "SELECT * FROM sensor WHERE user_id = :user_id;";
+    private static final String SELECT_BY_LOGIN = "SELECT * FROM sensor WHERE user_id = :user_id ORDER BY name;";
     private static final String SELECT_ENABLED = "SELECT * FROM sensor WHERE state = TRUE;";
     private static final String INSERT_SENSOR = "INSERT INTO sensor (user_id, name, num, type, api_key, description,create_time, state) " +
             "VALUES (:userId, :name, :num, :type, :apiKey, :description, :createTime, :state) RETURNING * ;";
@@ -80,9 +80,13 @@ public class SensorRepository {
                 (rs, rowNum) -> build(rs));
     }
 
-    public List<SensorDbo> getByIds(long userId, List<Long> sensorIds) {
+    public List<SensorDbo> getByIds(long userId, List<Integer> sensorIds) {
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("user_id", userId)
+                .addValue("ids", sensorIds);
+
         return jdbcTemplate.query(SELECT_BY_LOGIN_AND_IDS,
-                new MapSqlParameterSource("user_id", userId).addValue("ids", sensorIds),
+                parameterSource,
                 (rs, rowNum) -> build(rs));
     }
 }

@@ -1,0 +1,26 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+
+GET localhost:8080/api/readings/batch
+Cookie: JSESSIONID=C03C9576DA22FB8B253D3BE2A3CD4730
+
+{
+   "timeFrom":100,
+   "timeTo":200,
+   "sensorIds":[
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+   ]
+}
+
+###

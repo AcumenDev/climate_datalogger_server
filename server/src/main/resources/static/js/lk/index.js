@@ -47,7 +47,6 @@ var dashboard = {
         this.$("#datetimepickerTo").on("change.datetimepicker", function (e) {
             $('#datetimepickerFrom').datetimepicker('maxDate', e.date);
         });
-
     },
 
 
@@ -67,29 +66,17 @@ var dashboard = {
         var self = this;
         $.getJSON("/api/dashboard", function (data) {
             $("#charts").html(template(data));
-
             var sensors = data.data.items;
             for (var i = 0; i < sensors.length; i++) {
-
                 var id = sensors[i].id;
-
-
                 var dataChart = self.initChart();
-
-
                 var idChart = "chart_div_" + sensors[i].id;
-
                 var chart = new Chart($("#" + idChart)[0].getContext('2d'), dataChart);
-
-
                 var item = {id: id, data: dataChart, chart: chart};
-
                 self.chartItems.push(item);
             }
         })
-
     },
-
 
     initChart: function () {
         return {
@@ -146,18 +133,32 @@ var dashboard = {
         };
 
     },
-    renderChart: function () {
 
+    loadDataCharts: function () {
 
         var from = $('#datetimepickerFrom').datetimepicker('viewDate').format("x");
         var to = $('#datetimepickerTo').datetimepicker('viewDate').format("x");
 
 
+        var sensorIds;
+        for (var i = 0; i < dashboard.chartItems.length; i++) {
+            var item = dashboard.chartItems[i];
+            sensorIds.add(item.id)
+        }
 
+
+
+
+
+
+    },
+
+    renderChart: function () {
+
+        var from = $('#datetimepickerFrom').datetimepicker('viewDate').format("x");
+        var to = $('#datetimepickerTo').datetimepicker('viewDate').format("x");
 
         ///todo списик сенсоров и интервал времени
-
-
 
         $.ajax({
             method: "GET",
@@ -165,8 +166,6 @@ var dashboard = {
             data: {sensor_id: detail.query.id, sensor_type: detail.query.type, from: from, to: to}
         })
             .done(function (response) {
-
-
                 detail.conf.data.labels = [];
                 detail.conf.data.datasets[0].data = [];
                 // console.log("data есть " + response);
