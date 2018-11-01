@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Repository
@@ -20,6 +22,7 @@ public class SensorRepository {
             "VALUES (:userId, :name, :num, :type, :apiKey, :description, :createTime, :state) RETURNING * ;";
     private static final String SELECT_BY_ID_AND_USER_ID = "SELECT * FROM sensor WHERE id=:id AND user_id = :user_id;";
 
+    private static final String SELECT_ALL_SENSORS_IT_TO_TYPE_PAIR = "SELECT id, type from sensor;";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -88,5 +91,14 @@ public class SensorRepository {
         return jdbcTemplate.query(SELECT_BY_LOGIN_AND_IDS,
                 parameterSource,
                 (rs, rowNum) -> build(rs));
+    }
+
+    public List<Map.Entry<Integer, Integer>> getAllIdToType() {
+        return jdbcTemplate
+                .query(SELECT_ALL_SENSORS_IT_TO_TYPE_PAIR,
+                        (rs, rowNum) ->
+                                new AbstractMap.SimpleImmutableEntry<>(
+                                        rs.getInt("id"),
+                                        rs.getInt("type")));
     }
 }

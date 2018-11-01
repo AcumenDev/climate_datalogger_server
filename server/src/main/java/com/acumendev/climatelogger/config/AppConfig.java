@@ -33,16 +33,10 @@ public class AppConfig {
         return sensorDbos;
     }
 
-
-    /////Сенсоры с активными сессиями до оборудования
+    /////todo Сенсоры с активными сессиями до оборудования, вынести в отдельный класс манаджер сессий,
+    // запись их в бд, вести там лог продолжительности сисий вохможно время ответа на команды
     @Bean
     Map<Integer, SensorHandler> sensorsActiveSession() {
         return new ConcurrentHashMap<>();
-    }
-
-
-    @Bean
-    Map<Integer, SensorService> sensorsService(List<SensorService> services) {
-        return services.stream().collect(Collectors.toMap(SensorService::getType, Function.identity()));
     }
 }
