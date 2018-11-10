@@ -7,7 +7,7 @@ import com.acumendev.climatelogger.repository.SensorAsyncRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsAsyncRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureSettingRepository;
-import com.acumendev.climatelogger.service.SensorDescriptor;
+import com.acumendev.climatelogger.service.SensorAuthDescriptor;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class AuthHandler {
 
     private final Logger LOGGER = LoggerFactory.getLogger(AuthHandler.class);
 
-    private final Map<SensorDescriptor, SensorDbo> sensorsEnabled;
+    private final Map<SensorAuthDescriptor, SensorDbo> sensorsEnabled;
 
     private final Map<Integer, SensorHandler> sensorsActiveSession;
 
@@ -29,7 +29,7 @@ public class AuthHandler {
 
     private final SensorAsyncRepository sensorAsyncRepository;
 
-    public AuthHandler(Map<SensorDescriptor, SensorDbo> sensorsEnabled,
+    public AuthHandler(Map<SensorAuthDescriptor, SensorDbo> sensorsEnabled,
                        Map<Integer, SensorHandler> sensorsActiveSession,
                        TemperatureSettingRepository settingRepository,
                        TemperatureReadingsAsyncRepository temperatureReadingsAsyncRepository,
@@ -43,7 +43,7 @@ public class AuthHandler {
 
     public SensorHandler<BaseMessageOuterClass.BaseMessage> auth(Channel channel, String channelId, BaseMessageOuterClass.Auth authRequest) {
 
-        SensorDbo sensorDbo = sensorsEnabled.get(new SensorDescriptor(authRequest.getApiKey(), authRequest.getType()));
+        SensorDbo sensorDbo = sensorsEnabled.get(new SensorAuthDescriptor(authRequest.getApiKey(), authRequest.getType()));
 
         if (sensorDbo != null) {
             LOGGER.info("Авторизованн channelId {}  {}", channelId, authRequest);

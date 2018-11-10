@@ -2,12 +2,12 @@ package com.acumendev.climatelogger.service;
 
 import java.util.Objects;
 
-public class SensorDescriptor {
+public class SensorAuthDescriptor {
 
     final public String apiKey;
     final public int type;
 
-    public SensorDescriptor(String apiKey, int type) {
+    public SensorAuthDescriptor(String apiKey, int type) {
         this.apiKey = apiKey;
         this.type = type;
     }
@@ -16,7 +16,7 @@ public class SensorDescriptor {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SensorDescriptor that = (SensorDescriptor) o;
+        SensorAuthDescriptor that = (SensorAuthDescriptor) o;
         return type == that.type &&
                 Objects.equals(apiKey, that.apiKey);
     }

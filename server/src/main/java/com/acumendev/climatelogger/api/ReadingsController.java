@@ -11,10 +11,7 @@ import io.micrometer.core.annotation.Timed;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -32,7 +29,6 @@ public class ReadingsController {
         this.sensorServiceFactory = sensorServiceFactory;
     }
 
-
     @Timed(value = "api.readings", longTask = true)
     @GetMapping(path = "/api/readings")
     public BaseResponse readings(
@@ -43,16 +39,14 @@ public class ReadingsController {
         CurrentUser user = SecurityUtils.getUser();
         LOGGER.warn("{} {} {} {} {}", user.getId(), sensorId, sensorType, from != null ? new Timestamp(from) : null, to != null ? new Timestamp(to) : null);
         SensorService service = sensorServiceFactory.get(sensorId);
-        if (from != null) {//@AuthenticationPrincipal CurrentUser user,
+        if (from != null && to != null) {
             return BaseResponse.ok(service.getReadings(user, sensorId, from, to, 500));
         }
         return BaseResponse.ok(service.getReadings(user, sensorId));
     }
 
-    @GetMapping("/api/readings/batch")
+    @PostMapping("/api/readings/batch")
     public BaseResponse getReadingBatch(@RequestBody BatchReadingsDto batchReadingsDto) {
-        ////todo сделать кеш типов сенсорав чтобы не передавать его тип из форм и не лазит в бд
-
         CurrentUser user = SecurityUtils.getUser();
         List<ShortReadingsDto> readingsDtos = new ArrayList<>();
         ConcurrentHashMap<Integer, Object> sensorReadinsResult = new ConcurrentHashMap<>();
@@ -60,9 +54,7 @@ public class ReadingsController {
                 .sensorIds
                 .parallelStream()
                 .forEach(sensorId -> {
-///todo get sensortype
-                    SensorService service = sensorServiceFactory.get(sensorId); ///todo пока один тип сенсора
-                    // List<TemperatureReadings> readings =   ;
+                    SensorService service = sensorServiceFactory.get(sensorId);
                     sensorReadinsResult.put(sensorId, service.getReadings(user, sensorId, batchReadingsDto.timeFrom, batchReadingsDto.timeTo, 500));
                 });
         return BaseResponse.ok(sensorReadinsResult);

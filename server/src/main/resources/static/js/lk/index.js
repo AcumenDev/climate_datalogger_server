@@ -140,17 +140,26 @@ var dashboard = {
         var to = $('#datetimepickerTo').datetimepicker('viewDate').format("x");
 
 
-        var sensorIds;
+        var sensors = [];
         for (var i = 0; i < dashboard.chartItems.length; i++) {
             var item = dashboard.chartItems[i];
-            sensorIds.add(item.id)
+            sensors.push(item.id)
         }
 
-
-
-
-
-
+        $.ajax({
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            method: "POST",
+            url: "/api/readings/batch",
+            data: JSON.stringify({timeFrom: from, timeTo: to, sensorIds: sensors})
+        })
+            .done(function (response) {
+                //detail.conf.data.labels = [];
+                //detail.conf.data.datasets[0].data = [];
+                console.log("data есть " + response);
+                console.log(response);
+                // alert("Data Saved: " + msg);
+            });
     },
 
     renderChart: function () {

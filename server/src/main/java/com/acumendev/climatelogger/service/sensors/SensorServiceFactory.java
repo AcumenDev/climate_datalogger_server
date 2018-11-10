@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -16,7 +16,7 @@ public class SensorServiceFactory {
 
     private final Map<Integer, SensorService> sensorsService;
 
-    private final Map<Integer, Integer> sensorIdToSensorType = new ConcurrentHashMap<>();
+    private volatile Map<Integer, Integer> sensorIdToSensorType = new HashMap<>();
 
     private SensorRepository sensorRepository;
 
@@ -28,10 +28,11 @@ public class SensorServiceFactory {
     @PostConstruct
     public void loadSensor() {
         List<AbstractMap.Entry<Integer, Integer>> list = sensorRepository.getAllIdToType();
-
+        Map<Integer, Integer> sensorPrepare = new HashMap<>();
         list.forEach(integerIntegerEntry ->
-                sensorIdToSensorType
-                        .putIfAbsent(integerIntegerEntry.getKey(), integerIntegerEntry.getValue()));
+                sensorPrepare.put(integerIntegerEntry.getKey(), integerIntegerEntry.getValue()));
+
+        sensorIdToSensorType = sensorPrepare;
     }
 
     public SensorService get(int sensorId) {
