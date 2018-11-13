@@ -48,7 +48,6 @@ public class ReadingsController {
     @PostMapping("/api/readings/batch")
     public BaseResponse getReadingBatch(@RequestBody BatchReadingsDto batchReadingsDto) {
         CurrentUser user = SecurityUtils.getUser();
-        List<ShortReadingsDto> readingsDtos = new ArrayList<>();
         ConcurrentHashMap<Integer, Object> sensorReadinsResult = new ConcurrentHashMap<>();
         batchReadingsDto
                 .sensorIds
@@ -57,6 +56,7 @@ public class ReadingsController {
                     SensorService service = sensorServiceFactory.get(sensorId);
                     sensorReadinsResult.put(sensorId, service.getReadings(user, sensorId, batchReadingsDto.timeFrom, batchReadingsDto.timeTo, 500));
                 });
+
         return BaseResponse.ok(sensorReadinsResult);
     }
 }

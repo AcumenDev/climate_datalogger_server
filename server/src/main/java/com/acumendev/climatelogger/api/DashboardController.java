@@ -4,6 +4,7 @@ import com.acumendev.climatelogger.api.dto.BaseResponse;
 import com.acumendev.climatelogger.api.dto.dashboard.DashboardItemDto;
 import com.acumendev.climatelogger.service.dashboard.DashboardService;
 import com.acumendev.climatelogger.type.CurrentUser;
+import com.acumendev.climatelogger.utils.SecurityUtils;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,19 +26,19 @@ public class DashboardController {
     }
 
     @GetMapping("/api/dashboard")
-    public BaseResponse get(@AuthenticationPrincipal CurrentUser user) {
-        return BaseResponse.ok(dashboardService.getDefault(user.getId()));
+    public BaseResponse get() {
+        return BaseResponse.ok(dashboardService.getDefault( SecurityUtils.getUser().getId()));
     }
 
     @PostMapping("/api/dashboard")
-    public BaseResponse create(@AuthenticationPrincipal CurrentUser user, @RequestBody String name) {
-        dashboardService.create(user.getId(), name);
+    public BaseResponse create(@RequestBody String name) {
+        dashboardService.create(SecurityUtils.getUser().getId(), name);
         return BaseResponse.ok();
     }
 
     @PostMapping("/api/dashbord/item")
-    public BaseResponse addItem(@AuthenticationPrincipal CurrentUser user, @RequestBody DashboardItemDto itemDto) {
-        dashboardService.addItem(user.getId(), itemDto);
+    public BaseResponse addItem(@RequestBody DashboardItemDto itemDto) {
+        dashboardService.addItem(SecurityUtils.getUser().getId(), itemDto);
         return BaseResponse.ok();
     }
 

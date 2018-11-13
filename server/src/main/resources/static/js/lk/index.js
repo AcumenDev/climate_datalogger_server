@@ -3,11 +3,9 @@ var dashboard = {
     init: function ($) {
         this.$ = $;
 
-
         this.iniDateTimePicker();
         this.from = this.$('#datetimepickerFrom');
         this.to = this.$('#datetimepickerTo');
-
 
         this.chartItems = [];
         this.loadSensors();

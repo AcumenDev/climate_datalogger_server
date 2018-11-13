@@ -51,14 +51,14 @@ public class DashboardService {
         DashboardDbo dashboardDbo = dashboardRepository.get(userId, itemDto.dashordId);
         if (dashboardDbo == null) {
             throw new RuntimeException(
-                    String.format("Dashboard пользователя не найден userid %d  dashboardId %d sensorId %d", userId, itemDto.dashordId, itemDto.sensorId));
+                    String.format("Dashboard пользователя не найден userid %d dashboardId %d sensorId %d", userId, itemDto.dashordId, itemDto.sensorId));
         }
 
         SensorDbo sensorDbo = sensorRepository.getByIdAndUserId(userId, itemDto.sensorId);
 
         if (sensorDbo == null) {
             throw new RuntimeException(
-                    String.format("Sensor пользователя не найден userid %d  dashboardId %d sensorId %d", userId, itemDto.dashordId, itemDto.sensorId));
+                    String.format("Датчик пользователя не найден userid %d dashboardId %d sensorId %d", userId, itemDto.dashordId, itemDto.sensorId));
         }
 
         dashboardRepository.addItem(new DashboardItemDbo(itemDto.dashordId, itemDto.sensorId, itemDto.data));

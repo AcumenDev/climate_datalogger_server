@@ -5,6 +5,7 @@ import com.acumendev.climatelogger.api.dto.mapper.SensorDtoMapper;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.service.SensorManagerService;
 import com.acumendev.climatelogger.type.CurrentUser;
+import com.acumendev.climatelogger.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +26,7 @@ public class TemperatureSensorController {
 
     @GetMapping(path = "/api/sensors/temp/{id}")
     public BaseResponse getSensor(
-            @AuthenticationPrincipal CurrentUser user,
             @PathVariable("id") long id) {
-        return BaseResponse.ok(SensorDtoMapper.map(sensorRepository.getByIdAndUserId(id, user.getId())));
+        return BaseResponse.ok(SensorDtoMapper.map(sensorRepository.getByIdAndUserId(id, SecurityUtils.getUser().getId())));
     }
 }

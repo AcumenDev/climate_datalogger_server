@@ -27,6 +27,7 @@ public class AppConfig {
 
             sensorDbos.put(sensorAuthDescriptor, sensorDbo);
         });
+
         return sensorDbos;
     }
 

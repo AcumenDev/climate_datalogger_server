@@ -15,5 +15,4 @@ public class ErrorController {
         LOGGER.error("Ошибка обработки запроса", e);
         return "Что-то пошло не так, мы уже работаем над этим.";
     }
-
 }
