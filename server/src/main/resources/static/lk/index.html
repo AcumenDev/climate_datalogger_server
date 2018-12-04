@@ -8,131 +8,86 @@
 
     <link rel="stylesheet" type="text/css" href="/lib/bootstrap-4.0.0-dist/css/bootstrap.css">
 
-    <script src="/lib/jquery_v3.1.1/jquery.min.js"></script>
-    <script src="/lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
-
     <link rel="stylesheet" href="/css/lk/index.css">
-    <script src="/lib/handlebars/handlebars.min.js"></script>
-
-
     <link rel="stylesheet" type="text/css"
           href="/lib/tempus_datetimePicker5.0.0-alpha.16/css/tempusdominus-bootstrap-4.css">
-    <script src="/lib/fontawesome-free-5.0.6/fontawesome-all.min.js"></script>
-    <script src="/lib/Chart.js/Chart.js"></script>
-    <script src="/lib/moment_2.20.1/moment-with-locales.js"></script>
-    <script src="/lib/tempus_datetimePicker5.0.0-alpha.16/js/tempusdominus-bootstrap-4.js"></script>
 
-
-    <script src="/js/config.js"></script>
-    <script src="/js/lk/index.js"></script>
     <title>Climat Control</title>
 </head>
 <body>
 
+<nav class="navbar navbar-light bg-light navbar-expand-lg">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler"
+            aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/index.html">Климат контроль</a>
+    <div class="collapse navbar-collapse" id="navbarToggler">
 
-<nav class="navbar navbar-light bg-light navbar-expand-lg  ">
-    <a class="navbar-brand" href="#">Климат контроль</a>
-    <ul class="navbar-nav mr-auto ">
-        <li class="nav-item">
-            <a class="nav-link active" href="/lk/index.html">Рабочий стол</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/lk/sensors/list.html">Датчики</a>
-        </li>
-    </ul>
+        <ul class="navbar-nav mr-auto ">
+            <li class="nav-item">
+                <a class="nav-link active" href="/lk/index.html">Рабочий стол</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/lk/sensors/list.html">Датчики</a>
+            </li>
+        </ul>
 
-    <ul class="navbar-nav mr-4">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">Login </a>
-            <div class="dropdown-menu mr-4" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Настройки</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Выход</a>
-            </div>
-        </li>
-    </ul>
+        <ul class="navbar-nav mr-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">Login </a>
+                <div class="dropdown-menu mr-4" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Настройки</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Выход</a>
+                </div>
+            </li>
+        </ul>
+    </div>
 </nav>
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <span>Датчики</span>
-            <div id="sensors">
-            </div>
-        </div>
-        <div class="col-10">
-            <div class="row">
-                <div class="col-10">
-
-                    <div class="row  justify-content-center">
-
-                        <div class='col-3'>
-                            <input type="text" class="form-control datetimepicker-input" id="datetimepickerFrom"
-                                   data-toggle="datetimepicker" data-target="#datetimepickerFrom"/>
-
-                        </div>
-                        <div class='col-3'>
-                            <input type="text" class="form-control datetimepicker-input" id="datetimepickerTo"
-                                   data-toggle="datetimepicker" data-target="#datetimepickerTo"/>
-
-                        </div>
-                        <div class="col-1">
-
-                            <a class="btn btn-primary" id="drawChart" role="button">Показать</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="charts">
-            </div>
-
-
-        </div>
+    <div class="container ">
+        <div id="charts"></div>
     </div>
 </div>
 
-<script id="sensors-blank" type="text/x-handlebars-template">
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Название</th>
-            <th scope="col">Последенее активное время</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this}}
-        <tr class="nodeData">
-            <th scope="row">{{id}}</th>
-            <td>{{name}}</td>
-            <td>{{prettifyDate lastActiveTime}}</td>
-        </tr>
-        {{/each}}
-        </tbody>
-    </table>
-</script>
-
 <script id="charts-blank" type="text/x-handlebars-template">
+    <div class="text-center">{{data.name}}</div>
+    <div  class="row justify-content-around">
 
-    <div class="justify-content-center">{{data.name}}</div>
-    {{#each data.items}}
-    <div class="row">
-        <div class="col-5">
-
-            <div class="justify-content-center">
-                <span><b>{{id}}.</b>{{name}}</span>
+        {{#each data.items}}
+        <div class="card" style="width: 10rem; height: 10rem; margin: 1rem">
+            <div class="card-body">
+                <p class="card-title text-sm-center">{{name}}</p>
+                <p class="card-text text-center">{{id}}</p>
             </div>
-
-
-            <canvas class="chart_target" id="chart_div_{{id}}" data-id="{{id}}" data-name="{{name}}">
-            </canvas>
         </div>
+        <div class="card" style="width: 10rem; height: 10rem; margin: 1rem">
+            <div class="card-body">
+                <p class="card-title text-sm-center">{{name}}</p>
+                <p class="card-text text-center">{{id}}</p>
+            </div>
+        </div>
+        <div class="card" style="width: 10rem; height: 10rem; margin: 1rem">
+            <div class="card-body">
+                <p class="card-title text-sm-center">{{name}}</p>
+                <p class="card-text text-center">{{id}}</p>
+            </div>
+        </div>
+        {{/each}}
     </div>
-
-    {{/each}}
 </script>
 </body>
 
+<script src="/lib/handlebars/handlebars.min.js"></script>
+<script src="/lib/jquery_v3.1.1/jquery.min.js"></script>
+<script src="/lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
+<script src="/lib/fontawesome-free-5.0.6/fontawesome-all.min.js"></script>
+<script src="/lib/Chart.js/Chart.js"></script>
+<script src="/lib/moment_2.20.1/moment-with-locales.js"></script>
+<script src="/lib/tempus_datetimePicker5.0.0-alpha.16/js/tempusdominus-bootstrap-4.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/lk/index.js"></script>
 </html>

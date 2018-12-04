@@ -36,8 +36,6 @@ public class DashboardService {
                     dashboardItemDboList.stream()
                             .map(dashboardItemDbo -> dashboardItemDbo.sensorId)
                             .collect(Collectors.toList()));
-
-
             return new DashboardDto(dashboardDbo.id, dashboardDbo.name, sensorDbos);
         }
         return null;

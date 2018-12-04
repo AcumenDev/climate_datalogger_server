@@ -9,24 +9,19 @@
     <link rel="stylesheet" type="text/css" href="/lib/bootstrap-4.0.0-dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css"
           href="/lib/tempus_datetimePicker5.0.0-alpha.16/css/tempusdominus-bootstrap-4.css">
-    <script src="/lib/fontawesome-free-5.0.6/fontawesome-all.min.js"></script>
-    <script src="/lib/jquery_v3.1.1/jquery.min.js"></script>
-    <script src="/lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
-    <script src="/lib/Chart.js/Chart.js"></script>
-    <script src="/lib/handlebars/handlebars.min.js"></script>
-    <script src="/lib/moment_2.20.1/moment-with-locales.js"></script>
-    <script src="/lib/tempus_datetimePicker5.0.0-alpha.16/js/tempusdominus-bootstrap-4.js"></script>
 
-
-    <script src="/js/config.js"></script>
-    <script src="/js/lk/sensors/detail.js"></script>
     <title>Climat Control</title>
 </head>
 <body>
 
 
 <nav class="navbar navbar-light bg-light navbar-expand-lg">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler"
+            aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
     <a class="navbar-brand" href="#">Климат контроль</a>
+    <div class="collapse navbar-collapse" id="navbarToggler">
     <ul class="navbar-nav mr-auto ">
         <li class="nav-item">
             <a class="nav-link" href="/lk/index.html">Рабочий стол</a>
@@ -47,6 +42,7 @@
             </div>
         </li>
     </ul>
+    </div>
 </nav>
 
 
@@ -115,6 +111,17 @@
 
 
 </body>
+<script src="/lib/fontawesome-free-5.0.6/fontawesome-all.min.js"></script>
+<script src="/lib/jquery_v3.1.1/jquery.min.js"></script>
+<script src="/lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
+<script src="/lib/Chart.js/Chart.js"></script>
+<script src="/lib/handlebars/handlebars.min.js"></script>
+<script src="/lib/moment_2.20.1/moment-with-locales.js"></script>
+<script src="/lib/tempus_datetimePicker5.0.0-alpha.16/js/tempusdominus-bootstrap-4.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/lk/sensors/detail.js"></script>
+
+
 
 <script id="sensors-detail" type="text/x-handlebars-template">
 

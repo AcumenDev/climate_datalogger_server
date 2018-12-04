@@ -8,41 +8,39 @@
 
     <link rel="stylesheet" type="text/css" href="/lib/bootstrap-4.0.0-dist/css/bootstrap.css">
 
-    <script src="/lib/jquery_v3.1.1/jquery.min.js"></script>
-    <script src="/lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
-
-
-    <script src="/lib/handlebars/handlebars.min.js"></script>
-
-    <script src="/js/config.js"></script>
-    <script src="/js/lk/sensors/create.js"></script>
     <title>Climat Control</title>
 </head>
 <body>
 
 
 <nav class="navbar navbar-light bg-light navbar-expand-lg">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler"
+            aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
     <a class="navbar-brand" href="#">Климат контроль</a>
-    <ul class="navbar-nav mr-auto ">
-        <li class="nav-item">
-            <a class="nav-link" href="/lk/index.html">Рабочий стол</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link  active" href="/lk/sensors/list.html">Датчики</a>
-        </li>
-    </ul>
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav mr-auto ">
+            <li class="nav-item">
+                <a class="nav-link" href="/lk/index.html">Рабочий стол</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  active" href="/lk/sensors/list.html">Датчики</a>
+            </li>
+        </ul>
 
-    <ul class="navbar-nav mr-4">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">Login </a>
-            <div class="dropdown-menu mr-4" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Настройки</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Выход</a>
-            </div>
-        </li>
-    </ul>
+        <ul class="navbar-nav mr-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">Login </a>
+                <div class="dropdown-menu mr-4" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Настройки</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Выход</a>
+                </div>
+            </li>
+        </ul>
+    </div>
 </nav>
 
 <!--
@@ -62,7 +60,7 @@ private final boolean state;
             </div>
         </div>
         <div class="form-group row">
-            <label for="inputType"  class="col-sm-1 col-form-label">Тип</label>
+            <label for="inputType" class="col-sm-1 col-form-label">Тип</label>
             <div class="col-sm-3">
                 <select class="form-control" name="type" id="inputType">
                     <option value="1">Контроллер температуры</option>
@@ -104,4 +102,9 @@ private final boolean state;
 
 
 </body>
+<script src="/lib/jquery_v3.1.1/jquery.min.js"></script>
+<script src="/lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
+<script src="/lib/handlebars/handlebars.min.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/lk/sensors/create.js"></script>
 </html>

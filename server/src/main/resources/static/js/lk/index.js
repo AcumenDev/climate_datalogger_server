@@ -8,7 +8,7 @@ var dashboard = {
         this.to = this.$('#datetimepickerTo');
 
         this.chartItems = [];
-        this.loadSensors();
+       // this.loadSensors();
         this.loadDashboard();
 
         this.$("a[id='drawChart']").bind("click", this.renderChart);
