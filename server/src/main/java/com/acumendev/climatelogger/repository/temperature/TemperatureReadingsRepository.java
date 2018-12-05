@@ -17,23 +17,6 @@ public class TemperatureReadingsRepository {
     private final String insertReadings =
             "INSERT INTO sensor_temperature_readings (user_id, sensor_id,  value,  date_time) VALUES (:user_id, :sensor_id, :value, :date_time);";
 
-/*
-SELECT
-
-  extract ('epoch' from   timestamp'2018-02-05 22:50:00.000000'- timestamp'2018-02-05 22:40:00.000000');
-
-
-
-SELECT
-  (date_trunc('seconds', (date_time - TIMESTAMPTZ 'epoch') / 300) * 300 + TIMESTAMPTZ 'epoch') AS time,
-  avg(value) as VALUE ,
-  count(1)
-FROM sensor_temperature_readings
-  WHERE date_time   BETWEEN '2018-02-03 21:20:00.000000'  AND '2018-02-05 22:50:00.000000'
-GROUP BY time
-ORDER BY time;
-    */
-
     private final String selectSmartReadings = "" +
             "SELECT" +
             "  (date_trunc('seconds', (date_time - TIMESTAMPTZ 'epoch') / :bucketSize) * :bucketSize + TIMESTAMPTZ 'epoch') AS time," +
@@ -46,6 +29,9 @@ ORDER BY time;
             "GROUP BY 1 " +
             "ORDER BY 1";
     private final String selectReadings = "SELECT * FROM sensor_temperature_readings WHERE user_id=:user_id AND sensor_id =:sensor_id ORDER BY date_time;";// AND  date_time  BETWEEN :to  AND :from;";
+
+    private final String selectLastReading = "SELECT * FROM sensor_temperature_readings WHERE user_id=:user_id AND sensor_id =:sensor_id ORDER BY date_time limit 1;";// AND  date_time  BETWEEN :to  AND :from;";
+
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public TemperatureReadingsRepository(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -78,7 +64,6 @@ ORDER BY time;
     }
 
     private ReadingDbo build(@NonNull ResultSet rs) throws SQLException {
-
         return new ReadingDbo(
                 rs.getLong("user_id"),
                 rs.getInt("sensor_id"),
@@ -115,5 +100,20 @@ ORDER BY time;
                         .addValue("sensor_id", sensorId)
                         .addValue("user_id", userId),
                 (rs, rowNum) -> build(rs));
+    }
+
+    public ReadingDbo getLastReading(long sensorId, long userId) {
+        return jdbcTemplate.query(selectLastReading,
+                new MapSqlParameterSource()
+                        .addValue("sensor_id", sensorId)
+                        .addValue("user_id", userId),
+                rs -> {
+                    if (rs.next()) {
+                        return this.build(rs);
+                    }
+                    return null;
+                }
+        );
+
     }
 }

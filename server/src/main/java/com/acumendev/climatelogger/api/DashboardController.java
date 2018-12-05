@@ -1,17 +1,14 @@
 package com.acumendev.climatelogger.api;
 
 import com.acumendev.climatelogger.api.dto.BaseResponse;
+import com.acumendev.climatelogger.api.dto.dashboardValue.BatchValuesDto;
 import com.acumendev.climatelogger.api.dto.dashboard.DashboardItemDto;
 import com.acumendev.climatelogger.service.dashboard.DashboardService;
-import com.acumendev.climatelogger.type.CurrentUser;
 import com.acumendev.climatelogger.utils.SecurityUtils;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * Created by vladimir akummail@gmail.com on 6/13/18.
@@ -27,7 +24,7 @@ public class DashboardController {
 
     @GetMapping("/api/dashboard")
     public BaseResponse get() {
-        return BaseResponse.ok(dashboardService.getDefault( SecurityUtils.getUser().getId()));
+        return BaseResponse.ok(dashboardService.getDefault(SecurityUtils.getUser().getId()));
     }
 
     @PostMapping("/api/dashboard")

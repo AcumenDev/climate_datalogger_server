@@ -58,19 +58,7 @@
     <div  class="row justify-content-around">
 
         {{#each data.items}}
-        <div class="card" style="width: 10rem; height: 10rem; margin: 1rem">
-            <div class="card-body">
-                <p class="card-title text-sm-center">{{name}}</p>
-                <p class="card-text text-center">{{id}}</p>
-            </div>
-        </div>
-        <div class="card" style="width: 10rem; height: 10rem; margin: 1rem">
-            <div class="card-body">
-                <p class="card-title text-sm-center">{{name}}</p>
-                <p class="card-text text-center">{{id}}</p>
-            </div>
-        </div>
-        <div class="card" style="width: 10rem; height: 10rem; margin: 1rem">
+        <div class="card" style="width: 10rem; height: 10rem; margin: 1rem" id="dash_board_item_{{id}}">
             <div class="card-body">
                 <p class="card-title text-sm-center">{{name}}</p>
                 <p class="card-text text-center">{{id}}</p>

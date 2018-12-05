@@ -62,4 +62,6 @@ public class DashboardService {
         dashboardRepository.addItem(new DashboardItemDbo(itemDto.dashordId, itemDto.sensorId, itemDto.data));
 
     }
+
+
 }

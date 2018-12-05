@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class SensorServiceFactory {
 
-    private final Map<Integer, SensorService> sensorsService;
+    private final Map<SensorType, SensorService> sensorsService;
 
-    private volatile Map<Integer, Integer> sensorIdToSensorType = new HashMap<>();
+    private volatile Map<Integer, SensorType> sensorIdToSensorType = new HashMap<>();
 
     private SensorRepository sensorRepository;
 
@@ -28,11 +28,15 @@ public class SensorServiceFactory {
     @PostConstruct
     public void loadSensor() {
         List<AbstractMap.Entry<Integer, Integer>> list = sensorRepository.getAllIdToType();
-        Map<Integer, Integer> sensorPrepare = new HashMap<>();
+        Map<Integer, SensorType> sensorPrepare = new HashMap<>();
         list.forEach(integerIntegerEntry ->
-                sensorPrepare.put(integerIntegerEntry.getKey(), integerIntegerEntry.getValue()));
+                sensorPrepare.put(integerIntegerEntry.getKey(), SensorType.fromInt(integerIntegerEntry.getValue())));
 
         sensorIdToSensorType = sensorPrepare;
+    }
+
+    public SensorType getSensorType(int sensorId) {
+        return sensorIdToSensorType.get(sensorId);
     }
 
     public SensorService get(int sensorId) {

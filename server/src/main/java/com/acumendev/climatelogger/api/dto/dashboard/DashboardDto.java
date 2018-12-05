@@ -14,16 +14,18 @@ public class DashboardDto {
         this.id = id;
         this.name = name;
         this.items = items.stream()
-                .map(sensorDbo -> new DashboardItem(sensorDbo.id, sensorDbo.name))
+                .map(sensorDbo -> new DashboardItem(sensorDbo.id, sensorDbo.type, sensorDbo.name))
                 .collect(Collectors.toList());
     }
 
     private class DashboardItem {
         public final long id;
+        public final int type;
         public final String name;
 
-        private DashboardItem(long id, String name) {
+        private DashboardItem(long id, int type, String name) {
             this.id = id;
+            this.type = type;
             this.name = name;
         }
     }

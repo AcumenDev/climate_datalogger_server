@@ -2,10 +2,14 @@ package com.acumendev.climatelogger.service.sensors;
 
 import com.acumendev.climatelogger.type.CurrentUser;
 
+import java.util.List;
+
 public interface SensorService<T> {
-    int getType();
+    SensorType getType();
 
-    T getReadings(CurrentUser user, long sensorId);
+    List<T> getReadings(CurrentUser user, long sensorId);
 
-    T getReadings(CurrentUser user, long sensorId, long from, long to, int i);
+    List<T> getReadings(CurrentUser user, long sensorId, long from, long to, int maxRecords);
+
+    T getLastReading(CurrentUser user, long sensorId);
 }
