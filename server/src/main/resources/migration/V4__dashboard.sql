@@ -15,3 +15,5 @@ CREATE TABLE public.dashboard_item (
 
 ALTER TABLE public.dashboard_item
   OWNER TO datalogger;
+
+create index sensor_temperature_readings_date_time_indx on datalogger.public.sensor_temperature_readings(date_time);

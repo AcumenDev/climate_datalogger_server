@@ -30,7 +30,7 @@ public class TemperatureReadingsRepository {
             "ORDER BY 1";
     private final String selectReadings = "SELECT * FROM sensor_temperature_readings WHERE user_id=:user_id AND sensor_id =:sensor_id ORDER BY date_time;";// AND  date_time  BETWEEN :to  AND :from;";
 
-    private final String selectLastReading = "SELECT * FROM sensor_temperature_readings WHERE user_id=:user_id AND sensor_id =:sensor_id ORDER BY date_time limit 1;";// AND  date_time  BETWEEN :to  AND :from;";
+    private final String selectLastReading = "SELECT * FROM sensor_temperature_readings WHERE user_id=:user_id AND sensor_id =:sensor_id ORDER BY date_time desc limit 1;";
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 

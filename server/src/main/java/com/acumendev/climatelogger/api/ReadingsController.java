@@ -37,7 +37,7 @@ public class ReadingsController {
             @RequestParam(value = "from", required = false) Long from,
             @RequestParam(value = "to", required = false) Long to) {
         CurrentUser user = SecurityUtils.getUser();
-        LOGGER.warn("{} {} {} {} {}", user.getId(), sensorId, sensorType, from != null ? new Timestamp(from) : null, to != null ? new Timestamp(to) : null);
+        //LOGGER.warn("{} {} {} {} {}", user.getId(), sensorId, sensorType, from != null ? new Timestamp(from) : null, to != null ? new Timestamp(to) : null);
         SensorService service = sensorServiceFactory.get(sensorId);
         if (from != null && to != null) {
             return BaseResponse.ok(service.getReadings(user, sensorId, from, to, 500));

@@ -9,8 +9,9 @@ import com.acumendev.climatelogger.service.sensors.temperature.dto.TemperatureRe
 import com.acumendev.climatelogger.type.CurrentUser;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DashboardValueService { ////todo может другое название?
@@ -21,14 +22,14 @@ public class DashboardValueService { ////todo может другое назва
         this.sensorServiceFactory = sensorServiceFactory;
     }
 
-    public List<DashboardValueItem> getItemsValue(CurrentUser user, BatchValuesDto batchValuesDto) {
-        List<DashboardValueItem> result = new ArrayList<>(batchValuesDto.sensorIds.size());
+    public Map<Integer, DashboardValueItem>  getItemsValue(CurrentUser user, BatchValuesDto batchValuesDto) {
+        Map<Integer, DashboardValueItem> result = new HashMap<>(batchValuesDto.sensorIds.size());
 
         for (Integer sensorId : batchValuesDto.sensorIds) {
             SensorService sensorService = sensorServiceFactory.get(sensorId);
             SensorType sensorType = sensorServiceFactory.getSensorType(sensorId);
             TemperatureReadings readings = (TemperatureReadings) sensorService.getLastReading(user, sensorId);
-            result.add(new DashboardValueItem(sensorId, sensorType.VALUE, readings));
+            result.put(sensorId, new DashboardValueItem(sensorId, sensorType.VALUE, readings));
         }
         return result;
     }

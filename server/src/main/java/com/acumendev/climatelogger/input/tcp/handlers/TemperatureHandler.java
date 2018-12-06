@@ -12,6 +12,10 @@ import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+
+import static java.math.BigDecimal.ROUND_DOWN;
+
 public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.BaseMessage> {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TemperatureHandler.class);
@@ -78,10 +82,11 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
         if (temperature.hasNotify()) {
             TemperatureOuterClass.Notify request = temperature.getNotify();
             updateLastActiveTime();
+
             temperatureReadingsAsyncRepository.add(new ReadingDbo(
                     sensorDbo.userId,
                     sensorDbo.id,
-                    request.getCurrent(),
+                    new BigDecimal(request.getCurrent()).setScale(2, ROUND_DOWN).floatValue(),
                     System.currentTimeMillis()));
 
         } else if (temperature.hasConfig()) {

@@ -46,7 +46,7 @@ public class TemperatureService implements SensorService<TemperatureReadings> {
 
     @Override
     public TemperatureReadings getLastReading(CurrentUser user, long sensorId) {
-        ReadingDbo readingDbo = readingsRepository.getLastReading(user.getId(), sensorId);
+        ReadingDbo readingDbo = readingsRepository.getLastReading(sensorId, user.getId() );
         if (readingDbo != null) {
             return new TemperatureReadings(readingDbo.value, readingDbo.timeStamp);
         }

@@ -1,10 +1,10 @@
 var dashboard = {
 
     init: function ($) {
+        this.refreshInterval = 10 * 1000;
         this.$ = $;
         this.items = [];
         this.loadDashboard();
-
     },
 
     loadDashboard: function () {
@@ -18,7 +18,7 @@ var dashboard = {
                 self.items.push({sensorId: id, blockId: "dash_board_item_" + id});
             }
             self.refreshItems();
-        })
+        });
     },
 
     refreshItems: function () {
@@ -37,15 +37,20 @@ var dashboard = {
             data: JSON.stringify({sensorIds: sensors})
         })
             .done(function (response) {
-                //detail.conf.data.labels = [];
-                //detail.conf.data.datasets[0].data = [];
-                console.log("data есть " + response);
-                console.log(response);
-                // alert("Data Saved: " + msg);
-            });
-
-
-
+                for (var i = 0; i < dashboard.items.length; i++) {
+                    var item = dashboard.items[i];
+                    var valueData = response.data[item.sensorId];
+                    var value = valueData.data.value;
+                    $('#' + item.blockId).find(".value-sensor").text(value);
+                }
+            }).fail(function () {
+            for (var i = 0; i < dashboard.items.length; i++) {
+                $('#' + dashboard.items[i].blockId).find(".value-sensor").text("");
+            }
+        }).always(function () {
+            console.log("always");
+            dashboard.timerId = setTimeout(dashboard.refreshItems, dashboard.refreshInterval);
+        })
     }
 };
 
