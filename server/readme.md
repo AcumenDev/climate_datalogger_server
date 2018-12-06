@@ -1,0 +1,1 @@
+docker run --net host  --name datalogger-postgres -e POSTGRES_PASSWORD=postgres -d postgres:10.4

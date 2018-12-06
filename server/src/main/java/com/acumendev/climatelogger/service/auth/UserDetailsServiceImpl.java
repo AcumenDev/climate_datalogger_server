@@ -1,8 +1,8 @@
 package com.acumendev.climatelogger.service.auth;
 
-import com.acumendev.climatelogger.type.CurrentUser;
 import com.acumendev.climatelogger.repository.UserRepository;
 import com.acumendev.climatelogger.repository.dbo.UserDbo;
+import com.acumendev.climatelogger.type.CurrentUser;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public CurrentUser loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDbo userDbo = userRepository.getUserByLogin(username);
-        return new CurrentUser(userDbo.getId(), userDbo.getLogin(), userDbo.getPassword(), userDbo.isState());
+        return new CurrentUser(userDbo.id, userDbo.login, userDbo.password, userDbo.state);
     }
 }

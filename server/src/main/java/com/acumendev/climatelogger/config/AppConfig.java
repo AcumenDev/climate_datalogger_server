@@ -3,49 +3,38 @@ package com.acumendev.climatelogger.config;
 import com.acumendev.climatelogger.input.tcp.handlers.SensorHandler;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
-import com.acumendev.climatelogger.service.SensorDescriptor;
-import com.acumendev.climatelogger.service.sensors.SensorService;
+import com.acumendev.climatelogger.service.SensorAuthDescriptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Configuration
 public class AppConfig {
 
-    /////Сенсоры включенные пользователями
+    /////todo Сенсоры включенные пользователями перенести в SensorServiceFactory назвать по лучше
     @Bean
-    Map<SensorDescriptor, SensorDbo> sensorsEnabled(SensorRepository repository) {
+    Map<SensorAuthDescriptor, SensorDbo> sensorsEnabled(SensorRepository repository) {
         List<SensorDbo> sensorList = repository.getEnabled();
 
-        Map<SensorDescriptor, SensorDbo> sensorDbos = new ConcurrentHashMap<>();
+        Map<SensorAuthDescriptor, SensorDbo> sensorDbos = new ConcurrentHashMap<>();
 
         sensorList.forEach(sensorDbo -> {
-            SensorDescriptor sensorDescriptor =
-                    SensorDescriptor.builder()
-                            .type(sensorDbo.getType())
-                            .apiKey(sensorDbo.getApiKey())
-                            .build();
+            SensorAuthDescriptor sensorAuthDescriptor =
+                    new SensorAuthDescriptor(sensorDbo.apiKey, sensorDbo.type);
 
-            sensorDbos.put(sensorDescriptor, sensorDbo);
+            sensorDbos.put(sensorAuthDescriptor, sensorDbo);
         });
+
         return sensorDbos;
     }
 
-
-    /////Сенсоры с активными сессиями до оборудования
+    /////todo Сенсоры с активными сессиями до оборудования, вынести в отдельный класс манаджер сессий,
+    // запись их в бд, вести там лог продолжительности сисий вохможно время ответа на команды
     @Bean
-    Map<Long, SensorHandler> sensorsActiveSession() {
+    Map<Integer, SensorHandler> sensorsActiveSession() {
         return new ConcurrentHashMap<>();
-    }
-
-
-    @Bean
-    Map<Integer, SensorService> sensorsService(List<SensorService> services) {
-        return services.stream().collect(Collectors.toMap(SensorService::getType, Function.identity()));
     }
 }

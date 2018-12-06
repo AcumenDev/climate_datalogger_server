@@ -24,10 +24,6 @@ var detail = {
         },
         iniDateTimePicker: function () {
 
-
-
-
-
             this.$('#datetimepickerFrom').datetimepicker({
                 format: "DD.MM.YYYY HH:mm",
                 viewDate: moment().add(-1, 'day'),
@@ -36,9 +32,6 @@ var detail = {
                 sideBySide: true,
                 date: moment().add(-1, 'day').locale("ru")//.format("DD.MM.YYYY HH:mm")
             });
-
-
-
 
             this.$('#datetimepickerTo').datetimepicker({
                 format: "DD.MM.YYYY HH:mm",

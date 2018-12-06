@@ -2,17 +2,24 @@ package com.acumendev.climatelogger.input.tcp.handlers;
 
 import com.acumendev.climatelogger.protocol.BaseMessageOuterClass;
 import com.acumendev.climatelogger.protocol.TemperatureOuterClass;
-import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsAsyncRepository;
 import com.acumendev.climatelogger.repository.SensorAsyncRepository;
 import com.acumendev.climatelogger.repository.dbo.SensorDbo;
+import com.acumendev.climatelogger.repository.temperature.TemperatureReadingsAsyncRepository;
 import com.acumendev.climatelogger.repository.temperature.TemperatureSettingRepository;
 import com.acumendev.climatelogger.repository.temperature.dto.ReadingDbo;
 import com.acumendev.climatelogger.repository.temperature.dto.TempSettingsDbo;
 import io.netty.channel.Channel;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
+import java.math.BigDecimal;
+
+import static java.math.BigDecimal.ROUND_DOWN;
+
 public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.BaseMessage> {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(TemperatureHandler.class);
+
 
     private final SensorDbo sensorDbo;
     private final TemperatureSettingRepository settingRepository;
@@ -47,8 +54,8 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
     }
 
     @Override
-    public long getSensorId() {
-        return sensorDbo.getId();
+    public int getSensorId() {
+        return sensorDbo.id;
     }
 
     @Override
@@ -57,15 +64,14 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
     }
 
     private void updateLastActiveTime() {
-        sensorAsyncRepository.sensorActive(sensorDbo.getId(), System.currentTimeMillis());
-
+        sensorAsyncRepository.sensorActive(sensorDbo.id, System.currentTimeMillis());
     }
 
     @Override
     public void procces(BaseMessageOuterClass.BaseMessage msg) {
 
         if (!msg.hasTemperature()) {
-            log.error("Не поддерживаемый тип пакета {}", msg);
+            LOGGER.error("Не поддерживаемый тип пакета {}", msg);
             channel.close();
             return;
         }
@@ -75,28 +81,25 @@ public class TemperatureHandler implements SensorHandler<BaseMessageOuterClass.B
 
         if (temperature.hasNotify()) {
             TemperatureOuterClass.Notify request = temperature.getNotify();
-            ReadingDbo dbo = ReadingDbo.builder()
-                    .sensorId(sensorDbo.getId())
-                    .userId(sensorDbo.getUserId())
-                    .timeStamp(System.currentTimeMillis())
-                    .value(request.getCurrent())
-                    .build();
             updateLastActiveTime();
-            temperatureReadingsAsyncRepository.add(dbo);
 
+            temperatureReadingsAsyncRepository.add(new ReadingDbo(
+                    sensorDbo.userId,
+                    sensorDbo.id,
+                    new BigDecimal(request.getCurrent()).setScale(2, ROUND_DOWN).floatValue(),
+                    System.currentTimeMillis()));
 
         } else if (temperature.hasConfig()) {
             TemperatureOuterClass.Config config = temperature.getConfig();
-            TempSettingsDbo settingsDbo = TempSettingsDbo.builder()
-                    .sensorId(sensorDbo.getId())
-                    .gisteris(config.getGisteris())
-                    .target(config.getTarget())
-                    .tuningSensor(config.getTuningSensor())
-                    .build();
+            TempSettingsDbo settingsDbo = new TempSettingsDbo(
+                    sensorDbo.id,
+                    config.getGisteris(),
+                    config.getTarget(),
+                    config.getTuningSensor());
             updateLastActiveTime();
             settingRepository.update(settingsDbo);
         } else {
-            log.error("Не поддерживаемый тип пакета {}", msg);
+            LOGGER.error("Не поддерживаемый тип пакета {}", msg);
         }
 
     }

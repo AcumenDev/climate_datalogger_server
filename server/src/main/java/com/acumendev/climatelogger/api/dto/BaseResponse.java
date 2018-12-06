@@ -1,37 +1,54 @@
 package com.acumendev.climatelogger.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-@Builder
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResponse<T> {
-    private Error error;
-    private T data;
+    public final Error error;
+    public final T data;
+
+    public BaseResponse(T data, Error error) {
+        this.error = error;
+        this.data = data;
+    }
+
+    public BaseResponse(Error error) {
+        this.error = error;
+        this.data = null;
+    }
+
+    public BaseResponse(T data) {
+        this.error = null;
+        this.data = data;
+    }
+
+    public BaseResponse() {
+        this.error = null;
+        this.data = null;
+    }
 
     public static <T> BaseResponse ok(T data) {
-        return BaseResponse.<T>builder().data(data).build();
+        return new BaseResponse<>(data);
     }
 
     public static <T> BaseResponse ok() {
-        return BaseResponse.<T>builder().build();
+        return new BaseResponse<>();
     }
 
     public static <T> BaseResponse error(int code, String description) {
-        return BaseResponse.<T>builder().error(Error.builder().code(code).description(description).build()).build();
+        return new BaseResponse<>(new Error(code, description));
     }
 
 
-    @Getter
-    @Setter
-    @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private static class Error {
-        private int code;
-        private String description;
+        public final int code;
+        public final String description;
+
+        private Error(int code, String description) {
+            this.code = code;
+            this.description = description;
+        }
     }
 }

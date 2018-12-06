@@ -1,58 +1,59 @@
-$(function () {
+var dashboard = {
 
-    loadSensors();
+    init: function ($) {
+        this.refreshInterval = 10 * 1000;
+        this.$ = $;
+        this.items = [];
+        this.loadDashboard();
+    },
 
+    loadDashboard: function () {
+        var template = Handlebars.compile($("#charts-blank").html());
+        var self = this;
+        $.getJSON("/api/dashboard", function (data) {
+            $("#charts").html(template(data));
+            var sensors = data.data.items;
+            for (var i = 0; i < sensors.length; i++) {
+                var id = sensors[i].id;
+                self.items.push({sensorId: id, blockId: "dash_board_item_" + id});
+            }
+            self.refreshItems();
+        });
+    },
 
-    google.charts.load('current', {
-        packages: ['corechart', 'line']
-    });
-   // google.charts.setOnLoadCallback(loadInfo);
+    refreshItems: function () {
 
-
-    function loadInfo() {
+        var sensors = [];
+        for (var i = 0; i < dashboard.items.length; i++) {
+            var item = dashboard.items[i];
+            sensors.push(item.sensorId)
+        }
 
         $.ajax({
-            method: "GET",
-            url: "/api/readings",
-            data: {sensor_id: "2", sensor_type: 1}
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            method: "POST",
+            url: "/api/dashboard/values/get",
+            data: JSON.stringify({sensorIds: sensors})
         })
             .done(function (response) {
-                // alert("Data Saved: " + msg);
-
-
-                var data = new google.visualization.DataTable();
-                data.addColumn('datetime', 'X');
-                data.addColumn('number', 'T');
-                /*data.addColumn('number', 'H');
-                data.addColumn('number', 'Точка росы');*/
-                var values = response.data;
-                for (var i = 0; i < values.length; ++i) {
-                    var item = values[i];
-                    data.addRow([new Date(item.dateTime), item.value]);
+                for (var i = 0; i < dashboard.items.length; i++) {
+                    var item = dashboard.items[i];
+                    var valueData = response.data[item.sensorId];
+                    var value = valueData.data.value;
+                    $('#' + item.blockId).find(".value-sensor").text(value);
                 }
-                var options = {
-                    hAxis: {
-                        title: 'Время'
-                    },
-                    vAxis: {
-                        title: 'Значение'
-                    },
-                    width: 1000,
-                    height: 400
-                };
-
-                var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-
-                chart.draw(data, options);
-
-            });
+            }).fail(function () {
+            for (var i = 0; i < dashboard.items.length; i++) {
+                $('#' + dashboard.items[i].blockId).find(".value-sensor").text("");
+            }
+        }).always(function () {
+            console.log("always");
+            dashboard.timerId = setTimeout(dashboard.refreshItems, dashboard.refreshInterval);
+        })
     }
+};
 
-
-    function loadSensors() {
-        var template = Handlebars.compile($("#sensors-blank").html());
-        $.getJSON("/api/sensors", function (value) {
-            $("#sensors").html(template(value));
-        });
-    }
+$(function () {
+    dashboard.init($);
 });

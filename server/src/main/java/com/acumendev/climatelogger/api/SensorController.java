@@ -7,36 +7,42 @@ import com.acumendev.climatelogger.api.dto.mapper.SensorDtoMapper;
 import com.acumendev.climatelogger.repository.SensorRepository;
 import com.acumendev.climatelogger.service.SensorManagerService;
 import com.acumendev.climatelogger.type.CurrentUser;
-import io.micrometer.core.annotation.Timed;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.acumendev.climatelogger.utils.SecurityUtils;
+import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+@Api
 @RestController
-@AllArgsConstructor
 public class SensorController {
+    private final Logger LOGGER = LoggerFactory.getLogger(ReadingsController.class);
     private final SensorRepository sensorRepository;
     private final SensorManagerService sensorManager;
 
+    public SensorController(SensorRepository sensorRepository, SensorManagerService sensorManager) {
+        this.sensorRepository = sensorRepository;
+        this.sensorManager = sensorManager;
+    }
+
     @GetMapping(path = "/api/sensors")
-    public List<SensorDto> getSensors(@AuthenticationPrincipal CurrentUser user) {
-        return sensorRepository.getAllByUserId(user.getId())
+    public List<SensorDto> getSensors() {
+        return sensorRepository.getAllByUserId(SecurityUtils.getUser().getId())
                 .stream()
                 .map(SensorDtoMapper::map)
                 .collect(Collectors.toList());
     }
 
     @PostMapping(path = "/api/sensors")
-    public BaseResponse create(@AuthenticationPrincipal CurrentUser user, @RequestBody SensorCreateDto dto) {
+    public BaseResponse create(@RequestBody SensorCreateDto dto) {
         try {
-            sensorManager.create(user, dto);
+            sensorManager.create(SecurityUtils.getUser(), dto);
         } catch (Exception e) {
-            log.error("Ошибка при создании датчика {} {}", dto, e);
+            LOGGER.error("Ошибка при создании датчика {} {}", dto, e);
             return BaseResponse.error(1, "Ошибка при создании датчика.");
         }
         return BaseResponse.ok();
@@ -46,4 +52,6 @@ public class SensorController {
     public BaseResponse getSensors(@AuthenticationPrincipal CurrentUser user, @PathVariable("id") long id) {
         return BaseResponse.ok(SensorDtoMapper.map(sensorRepository.getByIdAndUserId(id, user.getId())));
     }
+
+
 }

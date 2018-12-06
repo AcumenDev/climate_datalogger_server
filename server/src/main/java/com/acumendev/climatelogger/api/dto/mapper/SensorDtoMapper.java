@@ -5,17 +5,16 @@ import com.acumendev.climatelogger.repository.dbo.SensorDbo;
 
 public class SensorDtoMapper {
     public static SensorDto map(SensorDbo dbo) {
-        return SensorDto.builder()
-                .id(dbo.getId())
-                .userId(dbo.getUserId())
-                .name(dbo.getName())
-                .num(dbo.getNum())
-                .type(dbo.getType())
-                .state(dbo.isState())
-                .apiKey(dbo.getApiKey())
-                .description(dbo.getDescription())
-                .lastActiveTime(dbo.getLastActiveDateTime())
-                .createTime(dbo.getCreateTime())
-                .build();
+        return new SensorDto(
+                dbo.id,
+                dbo.userId,
+                dbo.name,
+                dbo.num,
+                dbo.type,
+                dbo.description,
+                dbo.state,
+                dbo.apiKey,
+                dbo.lastActiveDateTime,
+                dbo.createTime);
     }
 }

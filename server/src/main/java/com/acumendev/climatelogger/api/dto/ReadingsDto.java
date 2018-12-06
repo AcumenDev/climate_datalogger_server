@@ -1,31 +1,39 @@
 package com.acumendev.climatelogger.api.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
-@Getter
-@Setter
+
 public class ReadingsDto {
 
-    List<Data> data;
-    String login;
-    Integer type;
-   /* Integer room;
-    Integer num;*/
+    /* Integer room;
+ Integer num;*/
+    public final List<Data> data;
+    public final String login;
+    public final Integer type;
 
-    @Getter
-    @Setter
-    @Builder
+    public ReadingsDto(List<Data> data, String login, Integer type) {
+        this.data = data;
+        this.login = login;
+        this.type = type;
+    }
+
     public static class Data {
-        private final Long id;
-        private final String login;
-        private final Integer room;
-        private final Integer num;
-        private final Integer type;
-        private final Double value;
-        private final Long dateTime;
+        public final Long id;
+        public final String login;
+        public final Integer room;
+        public final Integer num;
+        public final Integer type;
+        public final Double value;
+        public final Long dateTime;
+
+        public Data(Long id, String login, Integer room, Integer num, Integer type, Double value, Long dateTime) {
+            this.id = id;
+            this.login = login;
+            this.room = room;
+            this.num = num;
+            this.type = type;
+            this.value = value;
+            this.dateTime = dateTime;
+        }
     }
 }

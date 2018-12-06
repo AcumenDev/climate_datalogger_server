@@ -2,41 +2,34 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link rel="stylesheet" type="text/css" href="/lib/bootstrap-4.0.0-dist/css/bootstrap.css">
-
-    <script src="/lib/jquery_v3.1.1/jquery.min.js"></script>
-    <script src="/lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
-
     <link rel="stylesheet" href="css/index.css">
-    <script src="lib/handlebars/handlebars.min.js"></script>
-
-
-    <script src="js/index.js"></script>
     <title>Climat Control</title>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/index.html">Климат контроль</a>
-     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler"
+            aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <a class="navbar-brand" href="/index.html">Гриб контроль</a>
+    <div class="collapse navbar-collapse" id="navbarToggler">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item">
                 <a class="nav-link" href="#">О системе <span class="sr-only">(current)</span></a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0" id="login-form" action="/authentication/process">
-            <input name="username" class="form-control mr-sm-2" type="text" placeholder="Логин" value="akum">
-            <input name="password" class="form-control mr-sm-2" type="password" placeholder="Пароль" value="test">
+            <input name="username" class="form-control mr-sm-2" type="text" placeholder="Логин" value="">
+            <input name="password" class="form-control mr-sm-2" type="password" placeholder="Пароль" value="">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Вход</button>
         </form>
     </div>
 </nav>
-
 
 <div class="container-fluid">
 </div>
@@ -44,4 +37,8 @@
 
 </body>
 
+<script src="lib/jquery_v3.1.1/jquery.min.js"></script>
+<script src="lib/bootstrap-4.0.0-dist/js/bootstrap.js"></script>
+<script src="lib/handlebars/handlebars.min.js"></script>
+<script src="js/index.js"></script>
 </html>
